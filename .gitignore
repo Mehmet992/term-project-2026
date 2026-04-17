@@ -1,0 +1,18 @@
+build/
+nbproject/private/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Windows sistem dosyaları
+Thumbs.db
+Desktop.ini
+
+# NetBeans kullanıcıya özel yerel ayarlar (Mutlaka olmalı)
+nbproject/private/
+
+# Eğer ileride VS Code veya IntelliJ ile açarsa diye
+.vscode/
+.idea/
+*.iml
