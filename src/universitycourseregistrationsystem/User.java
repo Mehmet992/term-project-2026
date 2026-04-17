@@ -13,10 +13,12 @@ public abstract class User {
     private String password;
     private int userID;
     
+    //Getters
     public String getName() { return this.name;}
     public String getPassword() { return this.password;}
     public int getUserID() { return this.userID;}
     
+    //Constructor function
     public User(String name, String password, int userID) {
         this.name = name;
         this.password = password;
