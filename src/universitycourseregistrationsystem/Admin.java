@@ -4,19 +4,12 @@
  */
 package universitycourseregistrationsystem;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author mehmet
  */
-
-public class Professor extends User {
-    private ArrayList<Course> givenCourses;
-    
-    public Professor(String name, String password, int userID) {
+public class Admin extends User {
+    public Admin(String name, String password, int userID) {
         super(name, password, userID);
     }
-    
-    //Creates Courses and can see the information about the courses, not girişi
 }
