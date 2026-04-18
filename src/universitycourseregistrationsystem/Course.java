@@ -22,7 +22,7 @@ public class Course {
     private LocalTime startOfTheCourse;
     private LocalTime endOfTheCourse;
     private Day day;
-    private ArrayList<Course> prerequisities;
+    private ArrayList<Course> prerequisites;
     private ArrayList<Student> students; 
     
     
@@ -37,7 +37,7 @@ public class Course {
     public void setStartOfTheCourse(LocalTime startOfTheCourse) {this.startOfTheCourse = startOfTheCourse;}
     public void setEndOfTheCourse(LocalTime endOfTheCourse) {this.endOfTheCourse = endOfTheCourse;}
     public void setDay(Day day) {this.day = day;}
-    public void setPrerequisities(ArrayList<Course> prerequisities) {this.prerequisities = prerequisities;}
+    public void setPrerequisites(ArrayList<Course> prerequisites) {this.prerequisites = prerequisites;}
     public void setStudents(ArrayList<Student> students) {this.students = students;}
     
     
@@ -52,7 +52,7 @@ public class Course {
     public LocalTime getStartOfTheCourse() {return startOfTheCourse;}
     public LocalTime getEndOfTheCourse() {return endOfTheCourse;}
     public Day getDay() {return day;}
-    public ArrayList<Course> getPrerequisities() {return prerequisities;}
+    public ArrayList<Course> getPrerequisites() {return prerequisites;}
     public ArrayList<Student> getStudents() {return students;}
     
     
@@ -68,7 +68,18 @@ public class Course {
         this.startOfTheCourse = LocalTime.parse(startOfTheCourse); //In the format of "09:00"
         this.endOfTheCourse = LocalTime.parse(endOfTheCourse);
         this.day = day;
-        this.prerequisities = new ArrayList<>(); //Both are initialized, methods for adding will be provided
+        this.prerequisites = new ArrayList<>(); //Both are initialized, methods for adding will be provided
         this.students = new ArrayList<>();
+    }
+    
+       
+    public void addStudent(Student s1) {
+        students.add(s1);
+        currentCapacity++;
+    }
+    
+    
+    public void addPrerequisite(Course c1) {
+        prerequisites.add(c1);
     }
 }

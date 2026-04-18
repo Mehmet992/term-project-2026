@@ -46,15 +46,56 @@ public class Student extends User{
     private void checkSchedule(Course c1) throws ScheduleConflictException {
         for (Course temp : courses) {
             
+            /*
+            Logic Explanation: Either the first course's ending time is before second's start
+            or the first's start is after second's ending time
+            
+            Think about the examples:
+            10:40 - 12:30 (First Course)
+            11:40 - 13:30 (Second Course)
+            
+            ->First ending 12:30 is before second's start 11:40 -> FALSE
+            ->First start 10:40 is after second's ending 13:30 -> FALSE
+            results in ScheduleConflictException
+            
+            10:40 - 12:30 (First Course)
+            13:40 - 15:30 (Second Course)
+            
+            ->First ending 12:30 is before second's start 13:40 -> TRUE
+            ->First start 10:40 is after second's ending 15:30 -> FALSE
+            results in no Exception
+            
+            10:40 - 12:30 (Second Course)
+            13:40 - 15:30 (First Course)
+            
+            ->First ending 15:30 is before second's start 10:40 -> FALSE
+            ->First start 13:40 is after second's ending 12:30 -> TRUE
+            results in no Exception
+            */
+            
+            
+            if ((!temp.getEndOfTheCourse().isBefore(c1.getStartOfTheCourse()) || !temp.getStartOfTheCourse().isAfter(c1.getEndOfTheCourse())) && temp.getDay() == c1.getDay()) {
+                //Means that both false and we need to throw ScheduleConflict Exception
+                throw new ScheduleConflictException("There is a Schedule Conflict, double check your Schedule!");
+            }
         }
     }
     
     private void checkPrerequisites(Course c1) throws PrerequisiteNotMetException {
+        //If empty, means that there is no Prerequisite
+        if (!c1.getPrerequisites().isEmpty()) {
+            for (Course temp : c1.getPrerequisites()) {
+            //Throw a PrerequisiteNotMetException if there is at least one Course that the Student hasn't taken
+                if (!takenCourses.contains(temp)) {
+                    throw new PrerequisiteNotMetException("The Student has not taken the Course " + temp.getCourseName());
+                }
+            }
+        }
         
     }
     
     //If added successfully, return true otherwise false
-    public Boolean addCourse(Course c1) {
+    public void addCourse(Course c1) {
         try {
             //Try to add course
             //If capacity is full, catch CourseFullException
@@ -65,12 +106,17 @@ public class Student extends User{
             checkSchedule(c1);
             checkPrerequisites(c1);
             
+            //Capacity, Schedule and Prerequisites are checked, add the course.
+            courses.add(c1);
+            totalCredit += c1.getCredit();
+            c1.addStudent(this);
+            
         } catch(CourseFullException ex) {
             System.out.println(ex.getMessage());
-        } catch(ScheduleConflictException) {
-            
-        } catch (PrerequisiteNotMetException) {
-            
+        } catch(ScheduleConflictException ex) {
+            System.out.println(ex.getMessage());
+        } catch (PrerequisiteNotMetException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 }

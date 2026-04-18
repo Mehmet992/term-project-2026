@@ -14,7 +14,9 @@ public class UniversityCourseRegistrationSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // Just trying adding course and schedule conflict logic
+        Student s1 = new Student("Mehmet", "aaaBBec11", 00332255, 3.56);
+        Course c1 = new Course("Logic Design", "CENG", "SE2215", 1, 50, 4, "10:40", "12:30", Day.MONDAY);
     }
     
 }
