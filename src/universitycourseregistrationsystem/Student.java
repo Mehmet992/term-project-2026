@@ -74,9 +74,9 @@ public class Student extends User{
             */
             
             
-            if ((!temp.getEndOfTheCourse().isBefore(c1.getStartOfTheCourse()) || !temp.getStartOfTheCourse().isAfter(c1.getEndOfTheCourse())) && temp.getDay() == c1.getDay()) {
+            if (!temp.getEndOfTheCourse().isBefore(c1.getStartOfTheCourse()) && !temp.getStartOfTheCourse().isAfter(c1.getEndOfTheCourse()) && temp.getDay() == c1.getDay()) {
                 //Means that both false and we need to throw ScheduleConflict Exception
-                throw new ScheduleConflictException("There is a Schedule Conflict, double check your Schedule!");
+                throw new ScheduleConflictException("There is a Schedule conflict with the course:" + temp.getCourseName() + " and " + c1.getCourseName() + ", double check your Schedule!");
             }
         }
     }
