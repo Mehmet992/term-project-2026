@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class Professor extends User {
     private ArrayList<Course> givenCourses;
     
-    public Professor(String name, String password, int userID) {
-        super(name, password, userID);
+    public Professor(String name, String surname, String password, int userID) {
+        super(name, surname, password, userID);
     }
-    
+      
     //Creates Courses and can see the information about the courses, not girişi
 }

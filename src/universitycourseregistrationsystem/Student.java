@@ -27,8 +27,8 @@ public class Student extends User{
     public Boolean getOnProbation() {return this.onProbation;}
     
     //Constructor function
-    public Student(String name, String password, int userID, double gpa) {
-        super(name, password, userID);
+    public Student(String name, String surname, String password, int userID, double gpa) {
+        super(name, surname, password, userID);
         this.gpa = gpa;
         this.totalCredit = 0; //Initialized as 0
         this.onProbation = false; //Initialized as false

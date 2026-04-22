@@ -9,7 +9,7 @@ package universitycourseregistrationsystem;
  * @author mehmet
  */
 public class Admin extends User {
-    public Admin(String name, String password, int userID) {
-        super(name, password, userID);
+    public Admin(String name, String surname, String password, int userID) {
+        super(name, surname, password, userID);
     }
 }

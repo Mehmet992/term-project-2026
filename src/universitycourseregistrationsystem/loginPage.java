@@ -8,6 +8,12 @@ package universitycourseregistrationsystem;
  *
  * @author mehmet
  */
+
+import javax.swing.*;
+import java.awt.event.*;
+import java.io.IOException;
+
+
 public class loginPage extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(loginPage.class.getName());
     public loginPage() {
@@ -16,6 +22,21 @@ public class loginPage extends javax.swing.JFrame {
         this.setSize(500, 400);
         
         this.setLocationRelativeTo(null);
+        
+        loginBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //Check the fields if there are any empty field
+                try {
+                    if ("".equals(jTextField2.getText()) || "".equals(jPasswordField1.getText()) ) {
+                        throw new IOException("");
+                    }
+                    
+                    
+                } catch (IOException ex) {
+                    errorLbl.setText(" Empty field or fields! ");
+                }    
+            }
+        });
     }
 
     /**
@@ -35,8 +56,8 @@ public class loginPage extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        loginBtn = new javax.swing.JButton();
+        errorLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -59,6 +80,7 @@ public class loginPage extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 0);
         getContentPane().add(jTextField2, gridBagConstraints);
+        jTextField2.getAccessibleContext().setAccessibleName("idField");
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel1.setText("Password:");
@@ -78,6 +100,8 @@ public class loginPage extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         getContentPane().add(jPasswordField1, gridBagConstraints);
+        jPasswordField1.getAccessibleContext().setAccessibleName("passwordField");
+        jPasswordField1.getAccessibleContext().setAccessibleDescription("");
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel2.setText("University Course");
@@ -89,7 +113,7 @@ public class loginPage extends javax.swing.JFrame {
         getContentPane().add(jLabel2, gridBagConstraints);
 
         jLabel3.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        jLabel3.setText("Registration System");
+        jLabel3.setText("Login Page");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -97,13 +121,22 @@ public class loginPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         getContentPane().add(jLabel3, gridBagConstraints);
 
-        jButton1.setText("Sign Up");
-        jButton1.setPreferredSize(new java.awt.Dimension(100, 30));
-        jPanel1.add(jButton1);
+        jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jButton2.setText("Login");
-        jButton2.setPreferredSize(new java.awt.Dimension(100, 30));
-        jPanel1.add(jButton2);
+        loginBtn.setText("Login");
+        loginBtn.setPreferredSize(new java.awt.Dimension(100, 30));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 10, 0);
+        jPanel1.add(loginBtn, gridBagConstraints);
+        loginBtn.getAccessibleContext().setAccessibleName("loginBtn");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
+        jPanel1.add(errorLbl, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -137,10 +170,9 @@ public class loginPage extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new loginPage().setVisible(true));
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel errorLbl;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -148,5 +180,6 @@ public class loginPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton loginBtn;
     // End of variables declaration//GEN-END:variables
 }
