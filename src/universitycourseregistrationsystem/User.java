@@ -12,6 +12,7 @@ public abstract class User {
     private String name;
     private String surname;
     private String password;
+    private Types type;
     private int userID;
     
     //Getters
@@ -21,15 +22,18 @@ public abstract class User {
     public int getUserID() { return this.userID;}
     
     //Constructor function
-    public User(String name, String surname, String password, int userID) {
+    public User(String name, String surname, Types type, String password, int userID) {
         this.name = name;
         this.surname = surname;
+        this.type = type; //Types.STUDENT
         this.password = password;
         this.userID = userID;
     }
     
+    public User() {}
+    
     public String toFileFormat() {
-        return "UserID: " + userID + " | Password: " + password;
+        return name + "|" + surname + "|" + type.toString() + userID + "|" + password + "|";
     }
     
 }

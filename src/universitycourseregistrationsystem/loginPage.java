@@ -27,14 +27,51 @@ public class loginPage extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 //Check the fields if there are any empty field
                 try {
-                    if ("".equals(jTextField2.getText()) || "".equals(jPasswordField1.getText()) ) {
+                    if ("".equals(idField.getText()) || "".equals(passwordField.getText()) ) {
                         throw new IOException("");
+                    }
+                   
+                    
+                    String userLine = FileManager.searchUserByID1(idField.getText());
+                    String password = passwordField.getText();
+                    
+                    //If the given password is included in that user's line, according to the type of the User, show its menu.
+                    if (FileManager.isPasswordCorrect(userLine, password)) {
+                        if (userLine.contains(Types.STUDENT.toString())) {
+                            studentMenuPage smp = new studentMenuPage();
+                            
+                            smp.setVisible(true);
+                            
+                            
+                        }
+                        
+                        else if (userLine.contains(Types.PROFESSOR.toString())) {
+                            professorMenuPage pmp = new professorMenuPage();
+                            
+                            pmp.setVisible(true);
+                            
+                            
+                        }
+                        
+                        else if (userLine.contains(Types.ADMIN.toString())) {
+                            adminMenuPage amp = new adminMenuPage();
+                            
+                            amp.setVisible(true);
+                            
+                            
+                        }
                     }
                     
                     
                 } catch (IOException ex) {
                     errorLbl.setText(" Empty field or fields! ");
-                }    
+                } catch (FileNotFoundException ex) {
+                    errorLbl.setText(" File not found! ");
+                } catch (UserNotFoundException ex) {
+                    errorLbl.setText(" User not found! ");
+                } catch (PasswordIsWrongException ex) {
+                    errorLbl.setText(" Password is wrong! ");
+                }
             }
         });
     }
@@ -50,9 +87,9 @@ public class loginPage extends javax.swing.JFrame {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        idField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        passwordField = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -71,7 +108,7 @@ public class loginPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         getContentPane().add(jLabel4, gridBagConstraints);
 
-        jTextField2.setColumns(12);
+        idField.setColumns(12);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -79,8 +116,8 @@ public class loginPage extends javax.swing.JFrame {
         gridBagConstraints.ipady = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 0);
-        getContentPane().add(jTextField2, gridBagConstraints);
-        jTextField2.getAccessibleContext().setAccessibleName("idField");
+        getContentPane().add(idField, gridBagConstraints);
+        idField.getAccessibleContext().setAccessibleName("idField");
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel1.setText("Password:");
@@ -91,7 +128,7 @@ public class loginPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         getContentPane().add(jLabel1, gridBagConstraints);
 
-        jPasswordField1.setColumns(12);
+        passwordField.setColumns(12);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -99,9 +136,9 @@ public class loginPage extends javax.swing.JFrame {
         gridBagConstraints.ipady = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        getContentPane().add(jPasswordField1, gridBagConstraints);
-        jPasswordField1.getAccessibleContext().setAccessibleName("passwordField");
-        jPasswordField1.getAccessibleContext().setAccessibleDescription("");
+        getContentPane().add(passwordField, gridBagConstraints);
+        passwordField.getAccessibleContext().setAccessibleName("passwordField");
+        passwordField.getAccessibleContext().setAccessibleDescription("");
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel2.setText("University Course");
@@ -173,13 +210,13 @@ public class loginPage extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorLbl;
+    private javax.swing.JTextField idField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JButton loginBtn;
+    private javax.swing.JPasswordField passwordField;
     // End of variables declaration//GEN-END:variables
 }

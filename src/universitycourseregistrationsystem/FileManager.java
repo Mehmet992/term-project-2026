@@ -10,9 +10,10 @@ package universitycourseregistrationsystem;
  */
 import java.io.*;
 
+
 //This Class includes the methods that are for saving Login information for students, professors and admins
 public class FileManager {
-    private static final String userFileName = "Users";
+    private static final String userFileName = "Users.txt";
     
     
     public static void saveUser(User u1) throws IOException{
@@ -46,5 +47,38 @@ public class FileManager {
         
         br.close();
         return false;
+    }
+    
+    public static String searchUserByID1(String id) throws IOException, FileNotFoundException, UserNotFoundException {
+        File file = new File(userFileName);
+        if (!file.exists()) {
+            throw new FileNotFoundException("");
+        }
+        
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        
+        
+        while((line = br.readLine()) != null) {
+            if (line.contains(id)) {
+                sb.append(line).append("\n");
+            }
+        }
+        
+        br.close();
+        if (sb.isEmpty()) {
+            throw new UserNotFoundException("");
+        }
+        
+        return sb.toString();
+    }
+    
+    public static Boolean isPasswordCorrect(String line, String password) throws PasswordIsWrongException {
+        if (line.contains(password)) {
+            return true;
+        }
+        
+        throw new PasswordIsWrongException("");
     }
 }

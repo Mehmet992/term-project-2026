@@ -14,9 +14,22 @@ import java.util.ArrayList;
 public class Professor extends User {
     private ArrayList<Course> givenCourses;
     
-    public Professor(String name, String surname, String password, int userID) {
-        super(name, surname, password, userID);
+    public Professor(String name, String surname, Types type, String password, int userID) {
+        super(name, surname, type, password, userID);
     }
       
+    
+    @Override
+    public String toFileFormat() {
+        StringBuilder result = new StringBuilder(super.toFileFormat() + "|");
+        if (!givenCourses.isEmpty()) {
+            for (Course c1: givenCourses) {
+                result.append(c1.getCourseName() + "|");
+            }
+        }
+        
+        return result.toString();
+    }
+    
     //Creates Courses and can see the information about the courses, not girişi
 }

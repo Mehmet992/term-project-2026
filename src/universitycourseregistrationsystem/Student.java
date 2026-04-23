@@ -27,9 +27,9 @@ public class Student extends User{
     public Boolean getOnProbation() {return this.onProbation;}
     
     //Constructor function
-    public Student(String name, String surname, String password, int userID, double gpa) {
-        super(name, surname, password, userID);
-        this.gpa = gpa;
+    public Student(String name, String surname, Types type, String password, int userID) {
+        super(name, surname, type, password, userID);
+        this.gpa = 0; //Initialized as 0
         this.totalCredit = 0; //Initialized as 0
         this.onProbation = false; //Initialized as false
         courses = new ArrayList<>();
@@ -118,5 +118,23 @@ public class Student extends User{
         } catch (PrerequisiteNotMetException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    @Override
+    public String toFileFormat() {
+        StringBuilder result = new StringBuilder(super.toFileFormat() + gpa + "|" + totalCredit + "|" + onProbation + "|");
+        if (!courses.isEmpty()) {
+            for (Course c1: courses) {
+                result.append(c1.getCourseName() + "|");
+            }
+        }
+        
+        if (!takenCourses.isEmpty()) {
+            for (Course c1: takenCourses) {
+                result.append(c1.getCourseName() + "|");
+            } 
+        }
+        
+        return result.toString();
     }
 }
