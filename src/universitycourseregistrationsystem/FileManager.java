@@ -74,8 +74,13 @@ public class FileManager {
         return sb.toString();
     }
     
-    public static Boolean isPasswordCorrect(String line, String password) throws PasswordIsWrongException {
-        if (line.contains(password)) {
+    //For each User descendant, the first five information is in the form;
+    //name, surname, type, id, password -> where password is in the fifth place -> index 4
+    public static Boolean isPasswordCorrect(String[] line, String password) throws PasswordIsWrongException {
+        int indexOfPassword = 4;
+        
+        //Don't need to check whether the data is correct or not for the project -> yet, it will throw the exception
+        if (line[indexOfPassword].trim().equals(password)) {
             return true;
         }
         

@@ -35,9 +35,13 @@ public class loginPage extends javax.swing.JFrame {
                     String userLine = FileManager.searchUserByID1(idField.getText());
                     String password = passwordField.getText();
                     
-                    //If the given password is included in that user's line, according to the type of the User, show its menu.
-                    if (FileManager.isPasswordCorrect(userLine, password)) {
-                        if (userLine.contains(Types.STUDENT.toString())) {
+                    //Parsing the information into its elements
+                    String[] parsedLine = userLine.split("\\|");
+                    
+                    int indexOfTypeInfo = 2;
+                    
+                    if (FileManager.isPasswordCorrect(parsedLine, password)) {
+                        if (parsedLine[indexOfTypeInfo].trim().equals(Types.STUDENT.toString())) {
                             studentMenuPage smp = new studentMenuPage();
                             
                             smp.setVisible(true);
@@ -45,7 +49,7 @@ public class loginPage extends javax.swing.JFrame {
                             
                         }
                         
-                        else if (userLine.contains(Types.PROFESSOR.toString())) {
+                        else if (parsedLine[indexOfTypeInfo].trim().equals(Types.PROFESSOR.toString())) {
                             professorMenuPage pmp = new professorMenuPage();
                             
                             pmp.setVisible(true);
@@ -53,7 +57,7 @@ public class loginPage extends javax.swing.JFrame {
                             
                         }
                         
-                        else if (userLine.contains(Types.ADMIN.toString())) {
+                        else if (parsedLine[indexOfTypeInfo].trim().equals(Types.ADMIN.toString())) {
                             adminMenuPage amp = new adminMenuPage();
                             
                             amp.setVisible(true);

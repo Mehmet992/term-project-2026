@@ -11,12 +11,12 @@ package universitycourseregistrationsystem;
 public class adminMenuPage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(adminMenuPage.class.getName());
-
-    /**
-     * Creates new form adminMenuPage
-     */
     public adminMenuPage() {
         initComponents();
+        
+        this.setSize(500, 400);
+        
+        this.setLocationRelativeTo(null);
     }
 
     /**
