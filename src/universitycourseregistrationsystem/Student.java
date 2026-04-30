@@ -98,16 +98,23 @@ public class Student extends User{
     }
     
     private void checkPrerequisites(Course c1) throws PrerequisiteNotMetException {
-        //If empty, means that there is no Prerequisite
-        if (!c1.getPrerequisites().isEmpty()) {
-            for (String temp : c1.getPrerequisites()) {
-            //Throw a PrerequisiteNotMetException if there is at least one Course that the Student hasn't taken
-                if (!takenCourses.contains(temp)) {
-                    throw new PrerequisiteNotMetException("The Student has not taken the Course with ID: " + temp + " for the course: " + c1.getCourseID());
+        ArrayList<String> preqs = c1.getPrerequisites();
+        if (!preqs.isEmpty() || preqs.get(0).equalsIgnoreCase("NONE")) {
+            //If at least one of the prerequisite is not included in the student's takenCourses array throw PrerequisiteNotMetException
+            
+            
+            //Collect all the ID's of takenCourses
+            ArrayList<String> allCourseIDs = new ArrayList<>();
+            for (Course cr : takenCourses) {
+                allCourseIDs.add(cr.getCourseID());
+            }
+            
+            for (String preq : preqs) {
+                if (!allCourseIDs.contains(preq)) {
+                    throw new PrerequisiteNotMetException("The Student has not taken the necessary courses for the course: " + c1.getCourseID());
                 }
             }
-        }
-        
+        }   
     }
     
     //If added successfully, return true otherwise false

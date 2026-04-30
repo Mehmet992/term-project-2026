@@ -79,7 +79,7 @@ public class FileManager {
         
         //Search for the ids in allCourses, if match add it to the corresponding ArrayList
         for (Course c1 : allCourses) {
-            for (String takenCourse : currCourses) {
+            for (String takenCourse : takenCourses) {
                 String tempID = c1.getCourseID();
                 
                 if (takenCourse.equals(tempID)) {
