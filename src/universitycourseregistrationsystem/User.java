@@ -13,16 +13,23 @@ public abstract class User {
     private String surname;
     private String password;
     private Types type;
-    private int userID;
+    private String userID;
     
     //Getters
     public String getName() { return this.name;}
     public String getSurname() {return this.surname;}
     public String getPassword() { return this.password;}
-    public int getUserID() { return this.userID;}
+    public String getUserID() { return this.userID;}
+    
+    //Setters
+    public void setName(String name) {this.name = name;}
+    public void setSurname(String surname) {this.surname = surname;}
+    public void setPassword(String password) {this.password = password;}
+    public void setType(Types type) {this.type = type;}
+    public void setUserID(String userID) {this.userID = userID;}
     
     //Constructor function
-    public User(String name, String surname, Types type, String password, int userID) {
+    public User(String name, String surname, Types type, String password, String userID) {
         this.name = name;
         this.surname = surname;
         this.type = type; //Types.STUDENT

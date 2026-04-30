@@ -20,15 +20,31 @@ public class Student extends User{
     //Setters
     public void setProbation(Boolean onProbation) {this.onProbation = onProbation;}
     public void setGPA(double gpa) {this.gpa = gpa;}
+    public void setName(String name) {super.setName(name);}
+    public void setSurname(String surname) {super.setSurname(surname);}
+    public void setType(Types type) {super.setType(type);}
+    public void setPassword(String password) {super.setPassword(password);}
+    public void setUserID(String userID) {super.setUserID(userID);}
     
     //Getters
     public double getGPA() {return this.gpa;}
     public int getTotalCredit() {return this.totalCredit;}
     public Boolean getOnProbation() {return this.onProbation;}
+    public ArrayList<Course> getCourses() {return this.courses;}
+    public ArrayList<Course> getTakenCourses() {return this.takenCourses;}
     
     //Constructor function
-    public Student(String name, String surname, Types type, String password, int userID) {
+    public Student(String name, String surname, Types type, String password, String userID) {
         super(name, surname, type, password, userID);
+        this.gpa = 0; //Initialized as 0
+        this.totalCredit = 0; //Initialized as 0
+        this.onProbation = false; //Initialized as false
+        courses = new ArrayList<>();
+        takenCourses = new ArrayList<>();
+    }
+    
+    public Student() {
+        super();
         this.gpa = 0; //Initialized as 0
         this.totalCredit = 0; //Initialized as 0
         this.onProbation = false; //Initialized as false
@@ -84,10 +100,10 @@ public class Student extends User{
     private void checkPrerequisites(Course c1) throws PrerequisiteNotMetException {
         //If empty, means that there is no Prerequisite
         if (!c1.getPrerequisites().isEmpty()) {
-            for (Course temp : c1.getPrerequisites()) {
+            for (String temp : c1.getPrerequisites()) {
             //Throw a PrerequisiteNotMetException if there is at least one Course that the Student hasn't taken
                 if (!takenCourses.contains(temp)) {
-                    throw new PrerequisiteNotMetException("The Student has not taken the Course " + temp.getCourseName());
+                    throw new PrerequisiteNotMetException("The Student has not taken the Course with ID: " + temp + " for the course: " + c1.getCourseID());
                 }
             }
         }
@@ -118,6 +134,15 @@ public class Student extends User{
         } catch (PrerequisiteNotMetException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    public static void calculateGPA() {
+        
+    }
+    
+    public void addTakenCourse(Course c1) {
+        takenCourses.add(c1);
+        //calculateGPA(); //Calculate the new GPA
     }
     
     @Override

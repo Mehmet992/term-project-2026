@@ -4,19 +4,52 @@
  */
 package universitycourseregistrationsystem;
 
-/**
- *
- * @author mehmet
- */
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+
 public class studentMenuPage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(studentMenuPage.class.getName());
-    public studentMenuPage() {
+    public studentMenuPage(Student student, ArrayList<Course> allCourses) {
         initComponents();
         
         this.setSize(500, 400);
         
         this.setLocationRelativeTo(null);
+        
+        viewTranscriptBtn.addActionListener(new ActionListener() {
+           public void actionPerformed(ActionEvent e) {
+               StringBuilder res = new StringBuilder();
+               
+               res.append(student.getName()).append("\n");
+               res.append(student.getSurname()).append("\n");
+               res.append(student.getUserID()).append("\n");
+               
+               //Kursları yazdır.
+               ArrayList<Course> studentCourses = student.getCourses();
+               ArrayList<Course> studentTakenCourses = student.getTakenCourses();
+               
+               res.append("\n").append("----- Current Courses -----").append("\n");
+               
+               for (Course c1 : studentCourses) {
+                   res.append(c1.getCourseName()).append("\n");
+               }
+               
+               res.append("\n").append("----- Taken Courses -----").append("\n");
+               
+               for (Course c1 : studentTakenCourses) {
+                   res.append(c1.getCourseName()).append("\n");
+               }
+               
+               textArea.setText(res.toString());
+           } 
+        });
+    }
+    
+    public studentMenuPage() {
+        initComponents();
     }
 
     /**
@@ -30,24 +63,24 @@ public class studentMenuPage extends javax.swing.JFrame {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textArea = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
+        enrollCourseBtn = new javax.swing.JButton();
         jTextField6 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        dropCourseBtn = new javax.swing.JButton();
         jTextField5 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        viewTranscriptBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        textArea.setColumns(20);
+        textArea.setRows(5);
+        jScrollPane1.setViewportView(textArea);
 
         getContentPane().add(jScrollPane1, new java.awt.GridBagConstraints());
 
@@ -55,12 +88,12 @@ public class studentMenuPage extends javax.swing.JFrame {
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        jButton3.setText("Enroll Course");
+        enrollCourseBtn.setText("Enroll Course");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel3.add(jButton3, gridBagConstraints);
+        jPanel3.add(enrollCourseBtn, gridBagConstraints);
 
         jTextField6.setMinimumSize(new java.awt.Dimension(120, 80));
         jTextField6.setPreferredSize(new java.awt.Dimension(80, 30));
@@ -79,13 +112,13 @@ public class studentMenuPage extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jButton2.setText("Drop Course");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        dropCourseBtn.setText("Drop Course");
+        dropCourseBtn.addActionListener(this::dropCourseBtnActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel2.add(jButton2, gridBagConstraints);
+        jPanel2.add(dropCourseBtn, gridBagConstraints);
 
         jTextField5.setMinimumSize(new java.awt.Dimension(120, 80));
         jTextField5.setPreferredSize(new java.awt.Dimension(80, 30));
@@ -104,12 +137,13 @@ public class studentMenuPage extends javax.swing.JFrame {
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jButton1.setText("View Transcript");
+        viewTranscriptBtn.setText("View Transcript");
+        viewTranscriptBtn.addActionListener(this::viewTranscriptBtnActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel1.add(jButton1, gridBagConstraints);
+        jPanel1.add(viewTranscriptBtn, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -132,51 +166,30 @@ public class studentMenuPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void dropCourseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dropCourseBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_dropCourseBtnActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new studentMenuPage().setVisible(true));
-    }
+    private void viewTranscriptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewTranscriptBtnActionPerformed
+    
+    }//GEN-LAST:event_viewTranscriptBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton dropCourseBtn;
+    private javax.swing.JButton enrollCourseBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextArea textArea;
+    private javax.swing.JButton viewTranscriptBtn;
     // End of variables declaration//GEN-END:variables
 }

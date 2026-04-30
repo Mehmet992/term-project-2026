@@ -22,7 +22,7 @@ public class Course {
     private LocalTime startOfTheCourse;
     private LocalTime endOfTheCourse;
     private Day day;
-    private ArrayList<Course> prerequisites;
+    private ArrayList<String> prerequisites;
     private ArrayList<Student> students; 
     
     
@@ -37,7 +37,7 @@ public class Course {
     public void setStartOfTheCourse(LocalTime startOfTheCourse) {this.startOfTheCourse = startOfTheCourse;}
     public void setEndOfTheCourse(LocalTime endOfTheCourse) {this.endOfTheCourse = endOfTheCourse;}
     public void setDay(Day day) {this.day = day;}
-    public void setPrerequisites(ArrayList<Course> prerequisites) {this.prerequisites = prerequisites;}
+    public void setPrerequisites(ArrayList<String> prerequisites) {this.prerequisites = prerequisites;}
     public void setStudents(ArrayList<Student> students) {this.students = students;}
     
     
@@ -52,18 +52,18 @@ public class Course {
     public LocalTime getStartOfTheCourse() {return startOfTheCourse;}
     public LocalTime getEndOfTheCourse() {return endOfTheCourse;}
     public Day getDay() {return day;}
-    public ArrayList<Course> getPrerequisites() {return prerequisites;}
+    public ArrayList<String> getPrerequisites() {return prerequisites;}
     public ArrayList<Student> getStudents() {return students;}
     
     
     //Constructor
-    public Course(String courseName, String departmentName, String courseID, int sectionNumber, int maxCapacity, int credit, String startOfTheCourse, String endOfTheCourse, Day day) {
+    public Course(String courseName, String departmentName, String courseID, int sectionNumber, int maxCapacity, int currentCapacity, int credit, String startOfTheCourse, String endOfTheCourse, Day day) {
         this.courseName = courseName;
         this.departmentName = departmentName;
         this.courseID = courseID;
         this.sectionNumber = sectionNumber;
         this.maxCapacity = maxCapacity;
-        this.currentCapacity = 0; //Initialized as 0
+        this.currentCapacity = currentCapacity; //Initialized as 0
         this.credit = credit;
         this.startOfTheCourse = LocalTime.parse(startOfTheCourse); //In the format of "09:00"
         this.endOfTheCourse = LocalTime.parse(endOfTheCourse);
@@ -78,8 +78,7 @@ public class Course {
         currentCapacity++;
     }
     
-    
-    public void addPrerequisite(Course c1) {
-        prerequisites.add(c1);
+    public void addPrerequisities(String preq) {
+        prerequisites.add(preq);
     }
 }
