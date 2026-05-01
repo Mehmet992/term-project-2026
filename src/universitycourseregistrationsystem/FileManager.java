@@ -27,6 +27,48 @@ public class FileManager {
         bw.close();
     }
     
+    public static boolean deleteUser(String targetID){
+        File file = new File(userFileName);
+        ArrayList<String> users = new ArrayList<>();
+        boolean found = false;
+        
+        try(BufferedReader br = new BufferedReader(new FileReader(file))){
+            String line;
+            while((line = br.readLine()) != null){
+                String[] parts = line.split("\\|");
+                if(!parts[3].equals(targetID)){
+                    users.add(line);
+                }else{
+                    found = true;
+                }
+            }
+        }catch(IOException e){
+            return false;
+        }
+        
+        try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
+            for (String userLine : users) {
+                pw.println(userLine);
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return found;
+    }
+    
+    public static String loadUsers(){
+        StringBuilder sb = new StringBuilder();
+        try(BufferedReader br = new BufferedReader(new FileReader(userFileName))){
+            String line;
+            while((line = br.readLine()) != null){
+                sb.append(line).append("\n");
+            }
+        }catch(IOException e){
+            return "Error while reading the file";
+        }
+        return sb.toString();
+    }
+    
     //Contains yerine split ile ayırarak bul + complexity + faster
     public static String searchUserByID1(String id) throws IOException, FileNotFoundException, UserNotFoundException {
         File file = new File(userFileName);

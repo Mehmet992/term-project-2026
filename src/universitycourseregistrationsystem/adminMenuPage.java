@@ -4,6 +4,10 @@
  */
 package universitycourseregistrationsystem;
 
+import javax.swing.*;
+import java.awt.event.*;
+import java.io.IOException;
+
 /**
  *
  * @author mehmet
@@ -17,6 +21,53 @@ public class adminMenuPage extends javax.swing.JFrame {
         this.setSize(500, 400);
         
         this.setLocationRelativeTo(null);
+        
+        btnLoadUsers.addActionListener(new ActionListener() {
+           public void actionPerformed(ActionEvent e) {
+               StringBuilder res = new StringBuilder(FileManager.loadUsers());
+               jTextArea.setText(res.toString());
+           } 
+        });
+        
+        btnSaveUser.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               try{
+                   String typeInput = typeField.getText().trim().toUpperCase();
+                   Types type = Types.valueOf(typeInput);
+                   Student newStudent = new Student(nameField.getText(), surnameField.getText(), type, passwordField.getText(), idField.getText());
+                   FileManager.saveUser(newStudent);
+                   JOptionPane.showMessageDialog(rootPane, "User successfully saved!");
+               }catch(IOException ex){
+                   JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
+               }catch(IllegalArgumentException ex){
+                   JOptionPane.showMessageDialog(rootPane, "Invalid Type! Please write STUDENT/PROFESSOR/ADMIN!");
+               }catch(Exception ex){
+                   ex.getMessage();
+               }
+            } 
+        });
+        
+        btnDeleteUser.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               String idToDelete = idField.getText().trim();
+               
+               if(idToDelete.isEmpty()){
+                   JOptionPane.showMessageDialog(rootPane, "Please enter the ID of the user to delete!");
+                   return;
+               }
+               
+               int confirm = JOptionPane.showConfirmDialog(rootPane, "User with " + idToDelete + " is about to be deleted, are you sure?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+               if(confirm == JOptionPane.YES_OPTION){
+                   if(FileManager.deleteUser(idToDelete)){
+                       JOptionPane.showMessageDialog(rootPane, "User successfully deleted!");
+                       jTextArea.setText("");
+                       idField.setText("");
+                   }else{
+                       JOptionPane.showMessageDialog(rootPane, "User not found or error occured!");
+                   }
+               }
+            } 
+        });
     }
 
     /**
@@ -27,19 +78,178 @@ public class adminMenuPage extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea = new javax.swing.JTextArea();
+        btnLoadUsers = new javax.swing.JButton();
+        btnSaveUser = new javax.swing.JButton();
+        btnDeleteUser = new javax.swing.JButton();
+        idLabel = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        idField = new javax.swing.JTextField();
+        nameField = new javax.swing.JTextField();
+        surnameLabel = new javax.swing.JLabel();
+        surnameField = new javax.swing.JTextField();
+        passwordField = new javax.swing.JTextField();
+        typeLabel = new javax.swing.JLabel();
+        passwordLabel = new javax.swing.JLabel();
+        typeField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jTextArea.setColumns(20);
+        jTextArea.setRows(5);
+        jScrollPane1.setViewportView(jTextArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 11;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 644;
+        gridBagConstraints.ipady = 244;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        getContentPane().add(jScrollPane1, gridBagConstraints);
+
+        btnLoadUsers.setText("Load Users");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 17;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 0, 32, 0);
+        getContentPane().add(btnLoadUsers, gridBagConstraints);
+
+        btnSaveUser.setText("Save User");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 19;
+        gridBagConstraints.ipady = 17;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 50, 32, 0);
+        getContentPane().add(btnSaveUser, gridBagConstraints);
+
+        btnDeleteUser.setText("Delete User");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 8;
+        gridBagConstraints.ipady = 17;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 60, 32, 0);
+        getContentPane().add(btnDeleteUser, gridBagConstraints);
+
+        idLabel.setText("User ID:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 9;
+        gridBagConstraints.ipady = 14;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 30, 0, 0);
+        getContentPane().add(idLabel, gridBagConstraints);
+
+        nameLabel.setText("Name:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 16;
+        gridBagConstraints.ipady = 14;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 40, 0, 0);
+        getContentPane().add(nameLabel, gridBagConstraints);
+
+        idField.setPreferredSize(new java.awt.Dimension(60, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipadx = 36;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 0, 0, 0);
+        getContentPane().add(idField, gridBagConstraints);
+
+        nameField.setPreferredSize(new java.awt.Dimension(60, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipadx = 36;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        getContentPane().add(nameField, gridBagConstraints);
+
+        surnameLabel.setText("Surname:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 1;
+        gridBagConstraints.ipady = 14;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 40, 0, 0);
+        getContentPane().add(surnameLabel, gridBagConstraints);
+
+        surnameField.setPreferredSize(new java.awt.Dimension(60, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipadx = 36;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 10, 0, 0);
+        getContentPane().add(surnameField, gridBagConstraints);
+
+        passwordField.setPreferredSize(new java.awt.Dimension(60, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 36;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        getContentPane().add(passwordField, gridBagConstraints);
+
+        typeLabel.setText("Type:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 22;
+        gridBagConstraints.ipady = 14;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 30, 0, 0);
+        getContentPane().add(typeLabel, gridBagConstraints);
+
+        passwordLabel.setText("Password:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 8;
+        gridBagConstraints.ipady = 14;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 0, 0);
+        getContentPane().add(passwordLabel, gridBagConstraints);
+
+        typeField.setPreferredSize(new java.awt.Dimension(60, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipadx = 36;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        getContentPane().add(typeField, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -70,5 +280,20 @@ public class adminMenuPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDeleteUser;
+    private javax.swing.JButton btnLoadUsers;
+    private javax.swing.JButton btnSaveUser;
+    private javax.swing.JTextField idField;
+    private javax.swing.JLabel idLabel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField passwordField;
+    private javax.swing.JLabel passwordLabel;
+    private javax.swing.JTextField surnameField;
+    private javax.swing.JLabel surnameLabel;
+    private javax.swing.JTextField typeField;
+    private javax.swing.JLabel typeLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -40,7 +40,7 @@ public abstract class User {
     public User() {}
     
     public String toFileFormat() {
-        return name + "|" + surname + "|" + type.toString() + userID + "|" + password + "|";
+        return name + "|" + surname + "|" + type.toString() + "|" + userID + "|" + password + "|";
     }
     
 }
