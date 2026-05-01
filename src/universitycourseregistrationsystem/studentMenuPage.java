@@ -26,6 +26,9 @@ public class studentMenuPage extends javax.swing.JFrame {
                res.append(student.getName()).append("\n");
                res.append(student.getSurname()).append("\n");
                res.append(student.getUserID()).append("\n");
+               res.append(student.getGPA()).append("\n");
+               res.append(student.getTotalCredit()).append("\n");
+               res.append("On Probation: " + student.getOnProbation()).append("\n");
                //onProbationda olup olmadığını da yazdır
                
                //Kursları yazdır.
