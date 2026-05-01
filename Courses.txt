@@ -1,0 +1,4 @@
+Calculus I|Mathematics|MATH101|1|60|0|6|08:40|11:30|MONDAY|NONE
+Calculus I|Mathematics|MATH101|2|60|0|6|11:40|14:30|MONDAY|NONE
+Introduction to Programming I|Computer Engineering|CENG101|1|50|0|5|08:40|11:30|MONDAY|NONE
+Introduction to Programming I|Computer Engineering|CENG101|2|50|0|5|11:40|14:30|MONDAY|NONE

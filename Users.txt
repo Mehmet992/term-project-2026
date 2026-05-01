@@ -1,0 +1,2 @@
+Admin|Admin|ADMIN|admin123|admin
+Mehmet|Murt|STUDENT|23070001007|ahmet|0.0|0|false||
