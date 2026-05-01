@@ -148,17 +148,25 @@ public class Student extends User{
     @Override
     public String toFileFormat() {
         StringBuilder result = new StringBuilder(super.toFileFormat() + gpa + "|" + totalCredit + "|" + onProbation + "|");
-        if (!courses.isEmpty()) {
-            for (Course c1: courses) {
-                result.append(c1.getCourseName() + "|");
-            }
-        }
         
-        if (!takenCourses.isEmpty()) {
-            for (Course c1: takenCourses) {
-                result.append(c1.getCourseName() + "|");
+            for (int i = 0; i < courses.size(); i++) {
+                if(i < courses.size()-1){
+                    result.append(courses.get(i) + ";");
+                }else{
+                    result.append(courses.get(i));
+                }
+            }
+        
+        result.append("|");
+        
+            for (int i = 0; i < takenCourses.size(); i++) {
+                if(i < courses.size()-1){
+                    result.append(takenCourses.get(i) + ";");
+                }else{
+                    result.append(takenCourses.get(i));
+                }
             } 
-        }
+        
         
         return result.toString();
     }
