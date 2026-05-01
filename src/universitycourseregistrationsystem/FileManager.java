@@ -138,12 +138,9 @@ public class FileManager {
                     if (currCourse.equals(tempID)) {
                         s1.addCourse(c1);
                     }
-                } catch (ScheduleConflictException ex) {
-                    
-                } catch (CourseFullException ex) {
-                    
-                } catch (PrerequisiteNotMetException ex) {
-                    
+                } catch (ScheduleConflictException ex) {    
+                } catch (CourseFullException ex) {    
+                } catch (PrerequisiteNotMetException ex) {    
                 }
                 
             }
@@ -218,28 +215,84 @@ public class FileManager {
         return tempList;
     }
     
-    public static void enrollCourse(Student student, Course courseToBeAdded, String courseID) throws CourseNotFoundException, StudentOnProbationException, MaxNumberOfCourseException, CourseFullException, PrerequisiteNotMetException, ScheduleConflictException {       
+    public static void enrollCourse(Student student, Course courseToBeAdded, String courseID) throws CourseNotFoundException, StudentOnProbationException, MaxNumberOfCourseException, CourseFullException, PrerequisiteNotMetException, ScheduleConflictException, IOException {       
         if (courseToBeAdded == null) {
-            throw new CourseNotFoundException("");
+            throw new CourseNotFoundException("There is no possible course with ID: " + courseID);
         }
-                   
+        
+        //When choosing a new course, check if the person onProbation or not, if onProbation max 4 courses allowed, otherwise maximum 6
         if (student.getOnProbation() && student.getCourses().size() >= 4) {
-            throw new StudentOnProbationException("");
+            throw new StudentOnProbationException("Student is on probation, cannot take more than 4 courses! ");
         }
         
         if (student.getCourses().size() >= 6) {
-            throw new MaxNumberOfCourseException("");
+            throw new MaxNumberOfCourseException("Max number of courses! ");
         }
         
         student.addCourse(courseToBeAdded);
         
         //Write on file
-        saveStudentFile(student);
+        try { 
+            saveStudentFile(student);
+        } catch (IOException ex) { //Send it to the UI
+            throw new IOException("Something went wrong while file operation! ");
+        }
     }
     
-    public static void saveStudentFile(Student student) {
-        
+    public static void dropCourse(Student student, Course c) throws CourseNotFoundException, IOException {
+        if (c != null) {
+            Boolean isRemoved = student.getCourses().removeIf(course -> course.getCourseID().equals(c.getCourseID())); 
+            if (isRemoved) {
+                //Save the file
+                try {
+                    //Decrease the student's credit by dropped course credit
+                    student.setTotalCredit(student.getTotalCredit() - c.getCredit());
+
+                    //Remove the student from Course
+                    c.getStudents().removeIf(st -> st.getUserID().equals(student.getUserID()));
+
+                    //Decrease the capacity of the Course
+                    c.setCurrentCapacity(c.getCurrentCapacity() - 1);
+
+                    //Save the file
+                    saveStudentFile(student);
+                } catch (IOException ex) {
+                    throw new IOException("Something went wrong while file operation! ");
+                }
+            } else {
+                throw new CourseNotFoundException("Course with ID: " + c.getCourseID() + " is not found! ");
+            }
+        }    
     }
+    
+    public static void saveStudentFile(Student student) throws IOException {
+        ArrayList<String> allLines = new ArrayList<>();
+
+        // 1. ADIM: Dosyayı oku ve bağlantıyı hemen kapat
+        try (BufferedReader br = new BufferedReader(new FileReader(userFileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue; // Boş satırları atla
+
+                String[] parts = line.split("\\|");
+                if (parts.length > 0 && parts[3].equals(student.getUserID())) {
+                    allLines.add(student.toFileFormat());
+                } else {
+                    allLines.add(line);
+                }
+            }
+        } 
+
+        // 2. ADIM: Dosyayı temizle ve listeyi içine yaz
+        try (PrintWriter pw = new PrintWriter(new FileWriter(userFileName, false))) {
+            for (String line1 : allLines) {
+                pw.println(line1);
+            }
+            pw.flush();
+        }
+    }
+    
+    
     
     
     //For admin and professor
