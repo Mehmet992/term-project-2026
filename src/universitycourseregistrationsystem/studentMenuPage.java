@@ -26,6 +26,7 @@ public class studentMenuPage extends javax.swing.JFrame {
                res.append(student.getName()).append("\n");
                res.append(student.getSurname()).append("\n");
                res.append(student.getUserID()).append("\n");
+               //onProbationda olup olmadığını da yazdır
                
                //Kursları yazdır.
                ArrayList<Course> studentCourses = student.getCourses();
@@ -45,6 +46,48 @@ public class studentMenuPage extends javax.swing.JFrame {
                
                textArea.setText(res.toString());
            } 
+        });
+        
+        enrollCourseBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //When it is empty and clicked, show the possible Courses that can be added
+                ArrayList<Course> possibleCourses = FileManager.returnPossibleCourses(student, allCourses);
+                if (enrollTextField.getText().equals("")) {
+                     StringBuilder sb = new StringBuilder();
+                     for (Course c1 : possibleCourses) {
+                         sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append(" - ").append(c1.getStartOfTheCourse()).append(" - ").append(c1.getEndOfTheCourse()).append("\n");
+                     }
+
+                     textArea.setText(sb.toString());
+                }
+               
+                //When choosing a new course, check if the person onProbation or not, if onProbation max 4 courses allowed, otherwise maximum 6
+                String courseID = enrollTextField.getText();
+                Course courseToBeAdded = null;
+                for (Course c1 : possibleCourses) {
+                    if (c1.getCourseID().equals(courseID)) {
+                    courseToBeAdded = c1;
+                    break;
+                    }
+                }
+                
+                try {
+                    FileManager.enrollCourse(student, courseToBeAdded, courseID);
+                } catch (CourseNotFoundException ex){
+                    errorLbl.setText("There is no possible course with ID: " + courseID);
+                } catch (StudentOnProbationException ex){
+                    errorLbl.setText("Student is on probation, cannot take more than 4 courses! ");
+                } catch (MaxNumberOfCourseException ex){
+                    errorLbl.setText("Max number of courses! ");
+                } catch (CourseFullException ex){
+                    errorLbl.setText(ex.getMessage());
+                } catch (ScheduleConflictException ex){
+                    errorLbl.setText(ex.getMessage());
+                } catch (PrerequisiteNotMetException ex){
+                    errorLbl.setText(ex.getMessage());
+                }
+               
+            } 
         });
     }
     
@@ -67,13 +110,13 @@ public class studentMenuPage extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         enrollCourseBtn = new javax.swing.JButton();
-        jTextField6 = new javax.swing.JTextField();
+        enrollTextField = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         dropCourseBtn = new javax.swing.JButton();
-        jTextField5 = new javax.swing.JTextField();
+        dropTextField = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         viewTranscriptBtn = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        errorLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -99,13 +142,13 @@ public class studentMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanel3.add(enrollCourseBtn, gridBagConstraints);
 
-        jTextField6.setMinimumSize(new java.awt.Dimension(120, 80));
-        jTextField6.setPreferredSize(new java.awt.Dimension(80, 30));
+        enrollTextField.setMinimumSize(new java.awt.Dimension(120, 80));
+        enrollTextField.setPreferredSize(new java.awt.Dimension(80, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel3.add(jTextField6, gridBagConstraints);
+        jPanel3.add(enrollTextField, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -124,14 +167,14 @@ public class studentMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanel2.add(dropCourseBtn, gridBagConstraints);
 
-        jTextField5.setMinimumSize(new java.awt.Dimension(120, 80));
-        jTextField5.setPreferredSize(new java.awt.Dimension(80, 30));
-        jTextField5.addActionListener(this::jTextField5ActionPerformed);
+        dropTextField.setMinimumSize(new java.awt.Dimension(120, 80));
+        dropTextField.setPreferredSize(new java.awt.Dimension(80, 30));
+        dropTextField.addActionListener(this::dropTextFieldActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel2.add(jTextField5, gridBagConstraints);
+        jPanel2.add(dropTextField, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -161,12 +204,12 @@ public class studentMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(20, 0, 20, 0);
         getContentPane().add(jPanel4, gridBagConstraints);
 
-        jLabel1.setText("Error Label");
+        errorLbl.setText("Error Label");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 0);
-        getContentPane().add(jLabel1, gridBagConstraints);
+        getContentPane().add(errorLbl, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -175,9 +218,9 @@ public class studentMenuPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dropCourseBtnActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void dropTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dropTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_dropTextFieldActionPerformed
 
     private void viewTranscriptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewTranscriptBtnActionPerformed
     
@@ -185,15 +228,15 @@ public class studentMenuPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton dropCourseBtn;
+    private javax.swing.JTextField dropTextField;
     private javax.swing.JButton enrollCourseBtn;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField enrollTextField;
+    private javax.swing.JLabel errorLbl;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextArea textArea;
     private javax.swing.JButton viewTranscriptBtn;
     // End of variables declaration//GEN-END:variables
