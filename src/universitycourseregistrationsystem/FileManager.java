@@ -74,8 +74,8 @@ public class FileManager {
         s1.setUserID(line[3]);
         s1.setPassword(line[4]);
         
-        String[] currCourses = line[5].trim().split(";");
-        String[] takenCourses = line[6].trim().split(";");
+        String[] currCourses = line[8].trim().split(";");
+        String[] takenCourses = line[9].trim().split(";");
         
         //Search for the ids in allCourses, if match add it to the corresponding ArrayList
         for (Course c1 : allCourses) {

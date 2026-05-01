@@ -45,7 +45,7 @@ public class Student extends User{
     
     public Student() {
         super();
-        this.gpa = 0; //Initialized as 0
+        this.gpa = 0.0; //Initialized as 0
         this.totalCredit = 0; //Initialized as 0
         this.onProbation = false; //Initialized as false
         courses = new ArrayList<>();
