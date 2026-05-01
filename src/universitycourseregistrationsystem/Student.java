@@ -99,7 +99,7 @@ public class Student extends User{
     
     private void checkPrerequisites(Course c1) throws PrerequisiteNotMetException {
         ArrayList<String> preqs = c1.getPrerequisites();
-        if (!preqs.isEmpty() || preqs.get(0).equalsIgnoreCase("NONE")) {
+        if (!preqs.isEmpty()) {
             //If at least one of the prerequisite is not included in the student's takenCourses array throw PrerequisiteNotMetException
             
             
@@ -118,29 +118,22 @@ public class Student extends User{
     }
     
     //If added successfully, return true otherwise false
-    public void addCourse(Course c1) {
-        try {
-            //Try to add course
-            //If capacity is full, catch CourseFullException
-            //If Prerequisities are not met, catch PrerequisiteNotMetException
-            //If there is another lesson within that hour, catch ScheduleConflictException
+    public void addCourse(Course c1) throws ScheduleConflictException, PrerequisiteNotMetException, CourseFullException{
+        
+        //Try to add course
+        //If capacity is full, catch CourseFullException
+        //If Prerequisities are not met, catch PrerequisiteNotMetException
+        //If there is another lesson within that hour, catch ScheduleConflictException
             
-            checkCapacity(c1);
-            checkSchedule(c1);
-            checkPrerequisites(c1);
+        checkCapacity(c1);
+        checkSchedule(c1);
+        checkPrerequisites(c1);
             
-            //Capacity, Schedule and Prerequisites are checked, add the course.
-            courses.add(c1);
-            totalCredit += c1.getCredit();
-            c1.addStudent(this);
-            
-        } catch(CourseFullException ex) {
-            System.out.println(ex.getMessage());
-        } catch(ScheduleConflictException ex) {
-            System.out.println(ex.getMessage());
-        } catch (PrerequisiteNotMetException ex) {
-            System.out.println(ex.getMessage());
-        }
+        //Capacity, Schedule and Prerequisites are checked, add the course.
+        courses.add(c1);
+        totalCredit += c1.getCredit();
+        c1.addStudent(this);
+        
     }
     
     public static void calculateGPA() {

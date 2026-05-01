@@ -134,12 +134,20 @@ public class FileManager {
             for (String currCourse : currCourses) {
                 String tempID = c1.getCourseID();
                 
-                if (currCourse.equals(tempID)) {
-                    s1.addCourse(c1);
+                try {
+                    if (currCourse.equals(tempID)) {
+                        s1.addCourse(c1);
+                    }
+                } catch (ScheduleConflictException ex) {
+                    
+                } catch (CourseFullException ex) {
+                    
+                } catch (PrerequisiteNotMetException ex) {
+                    
                 }
+                
             }
-        }
-        
+        }    
     }
     
     public static ArrayList<Course> initAllCourses() throws FileNotFoundException, IOException {
@@ -175,6 +183,62 @@ public class FileManager {
         }
         
         return allCourses;
+    }
+    
+    public static ArrayList<Course> returnPossibleCourses(Student student, ArrayList<Course> allCourses) {
+        //Show all courses except the taken courses, current courses or the courses that have prerequisite and the student haven't taken them yet
+        ArrayList<Course> tempList = new ArrayList<>(); //For displaying all the available courses
+        ArrayList<String> takenCourseIDs = new ArrayList<>(); //For checking prerequisities
+                   
+        for (Course c1 : student.getTakenCourses()) {
+            takenCourseIDs.add(c1.getCourseID());
+        }
+                   
+        for (Course c1 : allCourses) {
+            if (student.getCourses().contains(c1) || student.getTakenCourses().contains(c1)) {
+                continue;
+            }
+                       
+            ArrayList<String> preqs = c1.getPrerequisites();
+            Boolean allPreqsMet = true;
+                       
+            if (!preqs.isEmpty()) {
+            for (String preq : preqs) {
+                if (!takenCourseIDs.contains(preq)) {
+                    allPreqsMet = false;
+                    }
+                 }
+            }
+                       
+            if (allPreqsMet) {
+                tempList.add(c1);
+            }
+        }
+        
+        return tempList;
+    }
+    
+    public static void enrollCourse(Student student, Course courseToBeAdded, String courseID) throws CourseNotFoundException, StudentOnProbationException, MaxNumberOfCourseException, CourseFullException, PrerequisiteNotMetException, ScheduleConflictException {       
+        if (courseToBeAdded == null) {
+            throw new CourseNotFoundException("");
+        }
+                   
+        if (student.getOnProbation() && student.getCourses().size() >= 4) {
+            throw new StudentOnProbationException("");
+        }
+        
+        if (student.getCourses().size() >= 6) {
+            throw new MaxNumberOfCourseException("");
+        }
+        
+        student.addCourse(courseToBeAdded);
+        
+        //Write on file
+        saveStudentFile(student);
+    }
+    
+    public static void saveStudentFile(Student student) {
+        
     }
     
     
