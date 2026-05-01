@@ -31,19 +31,39 @@ public class adminMenuPage extends javax.swing.JFrame {
         
         btnSaveUser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               try{
-                   String typeInput = typeField.getText().trim().toUpperCase();
-                   Types type = Types.valueOf(typeInput);
-                   Student newStudent = new Student(nameField.getText(), surnameField.getText(), type, passwordField.getText(), idField.getText());
-                   FileManager.saveUser(newStudent);
-                   JOptionPane.showMessageDialog(rootPane, "User successfully saved!");
-               }catch(IOException ex){
-                   JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
-               }catch(IllegalArgumentException ex){
-                   JOptionPane.showMessageDialog(rootPane, "Invalid Type! Please write STUDENT/PROFESSOR/ADMIN!");
-               }catch(Exception ex){
-                   ex.getMessage();
-               }
+                String typeInput = typeField.getText().trim().toUpperCase();
+                
+                //Empty field check
+                if(nameField.getText().isEmpty() || surnameField.getText().isEmpty() || idField.getText().isEmpty() || typeField.getText().isEmpty() || passwordField.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(rootPane, "Empty field(s), please fill in all fields!");
+                    return;
+                }
+                
+                try{
+                    Types type = Types.valueOf(typeInput); // String -> enum
+                    User newUser;
+                    if(type == Types.STUDENT){
+                        newUser = new Student(nameField.getText(), surnameField.getText(), type, passwordField.getText(), idField.getText());
+                    }else if(type == Types.PROFESSOR){
+                        newUser = new Professor(nameField.getText(), surnameField.getText(), type, passwordField.getText(), idField.getText());
+                    }else{
+                        throw new IllegalArgumentException(); //Throwing the exception when other types are written
+                    }
+                    
+                    FileManager.saveUser(newUser); //Saving the new user to user file
+                    JOptionPane.showMessageDialog(rootPane, "User successfully saved!");
+                    nameField.setText("");
+                    surnameField.setText("");
+                    typeField.setText("");
+                    passwordField.setText("");
+                    idField.setText("");
+                }catch(IllegalArgumentException ex){
+                    JOptionPane.showMessageDialog(rootPane, "Invalid Type! Please write STUDENT or PROFESSOR!");
+                }catch(IOException ex){
+                    JOptionPane.showMessageDialog(rootPane, "File Error: " + ex.getMessage());
+                }catch(Exception ex){
+                    ex.printStackTrace(); //Showing other exception messages in the console
+                }
             } 
         });
         
