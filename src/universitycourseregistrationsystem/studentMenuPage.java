@@ -4,9 +4,10 @@
  */
 package universitycourseregistrationsystem;
 
-import javax.swing.*;
+import java.io.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 
 public class studentMenuPage extends javax.swing.JFrame {
@@ -55,42 +56,103 @@ public class studentMenuPage extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 //When it is empty and clicked, show the possible Courses that can be added
                 ArrayList<Course> possibleCourses = FileManager.returnPossibleCourses(student, allCourses);
-                if (enrollTextField.getText().equals("")) {
+                if (enrollTextField.getText().isEmpty()) {
                      StringBuilder sb = new StringBuilder();
                      for (Course c1 : possibleCourses) {
-                         sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append(" - ").append(c1.getStartOfTheCourse()).append(" - ").append(c1.getEndOfTheCourse()).append("\n");
+                         sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append(" - ").append(c1.getStartOfTheCourse()).append(" - ").append(c1.getEndOfTheCourse()).append(" - ").append(c1.getDay()).append("\n");
                      }
 
                      textArea.setText(sb.toString());
+                } else {
+                    String courseID = enrollTextField.getText();
+                    Course courseToBeAdded = null;
+                    for (Course c1 : possibleCourses) {
+                        if (c1.getCourseID().equals(courseID)) {
+                        courseToBeAdded = c1;
+                        break;
+                        }
+                    }
+
+
+                    try {
+                        FileManager.enrollCourse(student, courseToBeAdded, courseID);
+                        JOptionPane.showMessageDialog(rootPane, "The Course with ID: " + courseID + " has successfully added! ");
+                    } catch (CourseNotFoundException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (StudentOnProbationException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (MaxNumberOfCourseException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (CourseFullException ex){
+                        int choice = JOptionPane.showConfirmDialog(rootPane,
+                                "This Course is full right now! Do you want to be on Wait List? ",
+                                "Course Full!",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE);
+                        
+                        if (choice == JOptionPane.YES_OPTION) {
+                            try {
+                               FileManager.addToWaitList(student, courseToBeAdded);
+                               JOptionPane.showMessageDialog(rootPane, "The Student has successfully added to waitlist for the course with ID: " + courseID);
+                            } catch (IOException ex1) {
+                                JOptionPane.showMessageDialog(rootPane, ex1.getMessage());
+                            }
+                        }
+                    } catch (ScheduleConflictException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (PrerequisiteNotMetException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    }
                 }
                
-                //When choosing a new course, check if the person onProbation or not, if onProbation max 4 courses allowed, otherwise maximum 6
-                String courseID = enrollTextField.getText();
-                Course courseToBeAdded = null;
-                for (Course c1 : possibleCourses) {
-                    if (c1.getCourseID().equals(courseID)) {
-                    courseToBeAdded = c1;
-                    break;
+                
+               
+            } 
+        });
+        
+        dropCourseBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //Take the id of the course that will be dropped, search the line with id if doesn't exist, throw new CourseNotFoundException
+                //Rearrange the line and rewrite the file that's it 
+                
+                String courseID = dropTextField.getText();
+                if (courseID.isEmpty()) {
+                    //Show the current courses
+                    StringBuilder sb = new StringBuilder();
+                    for (Course c1 : student.getCourses()) {
+                        sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append(" - ").append(c1.getStartOfTheCourse()).append(" - ").append(c1.getEndOfTheCourse()).append(" - ").append(c1.getDay()).append("\n");
+                    }
+                    
+                    textArea.setText(sb.toString());
+                } else {
+                    Course c = null;
+                    for (Course course : allCourses) {
+                        if (course.getCourseID().equals(courseID)) {
+                            c = course;
+                            break;
+                        }
+                    }
+
+                    if (c == null) {
+                        JOptionPane.showMessageDialog(rootPane, "No Course with ID: " + courseID);
+                        return;
+                    }
+
+                    try { //DROP COURSE YAPILDIĞI ZAMAN WAİTLİSTTE BİRİSİ VARSA ONU DERSE EKLE!
+                        FileManager.dropCourse(student, c);
+                        JOptionPane.showMessageDialog(rootPane, "The Course with ID: " + courseID + " has successfully dropped! ");
+                    } catch (CourseNotFoundException ex) {
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                     }
                 }
                 
-                try {
-                    FileManager.enrollCourse(student, courseToBeAdded, courseID);
-                } catch (CourseNotFoundException ex){
-                    errorLbl.setText("There is no possible course with ID: " + courseID);
-                } catch (StudentOnProbationException ex){
-                    errorLbl.setText("Student is on probation, cannot take more than 4 courses! ");
-                } catch (MaxNumberOfCourseException ex){
-                    errorLbl.setText("Max number of courses! ");
-                } catch (CourseFullException ex){
-                    errorLbl.setText(ex.getMessage());
-                } catch (ScheduleConflictException ex){
-                    errorLbl.setText(ex.getMessage());
-                } catch (PrerequisiteNotMetException ex){
-                    errorLbl.setText(ex.getMessage());
-                }
-               
-            } 
+                
+                 
+            }
         });
     }
     
@@ -119,7 +181,6 @@ public class studentMenuPage extends javax.swing.JFrame {
         dropTextField = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         viewTranscriptBtn = new javax.swing.JButton();
-        errorLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -207,13 +268,6 @@ public class studentMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(20, 0, 20, 0);
         getContentPane().add(jPanel4, gridBagConstraints);
 
-        errorLbl.setText("Error Label");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 0);
-        getContentPane().add(errorLbl, gridBagConstraints);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -234,7 +288,6 @@ public class studentMenuPage extends javax.swing.JFrame {
     private javax.swing.JTextField dropTextField;
     private javax.swing.JButton enrollCourseBtn;
     private javax.swing.JTextField enrollTextField;
-    private javax.swing.JLabel errorLbl;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

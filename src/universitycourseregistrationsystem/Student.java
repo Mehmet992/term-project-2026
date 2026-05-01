@@ -25,6 +25,7 @@ public class Student extends User{
     public void setType(Types type) {super.setType(type);}
     public void setPassword(String password) {super.setPassword(password);}
     public void setUserID(String userID) {super.setUserID(userID);}
+    public void setTotalCredit(int totalCredit) {this.totalCredit = totalCredit;}
     
     //Getters
     public double getGPA() {return this.gpa;}
@@ -131,7 +132,6 @@ public class Student extends User{
             
         //Capacity, Schedule and Prerequisites are checked, add the course.
         courses.add(c1);
-        totalCredit += c1.getCredit();
         c1.addStudent(this);
         
     }
@@ -149,23 +149,23 @@ public class Student extends User{
     public String toFileFormat() {
         StringBuilder result = new StringBuilder(super.toFileFormat() + gpa + "|" + totalCredit + "|" + onProbation + "|");
         
-            for (int i = 0; i < courses.size(); i++) {
-                if(i < courses.size()-1){
-                    result.append(courses.get(i) + ";");
-                }else{
-                    result.append(courses.get(i));
-                }
+        for (int i = 0; i < courses.size(); i++) {
+            if(i < courses.size()-1){
+                result.append(courses.get(i).getCourseID() + ";");
+            }else{
+                result.append(courses.get(i).getCourseID());
             }
+        }
         
         result.append("|");
         
-            for (int i = 0; i < takenCourses.size(); i++) {
-                if(i < courses.size()-1){
-                    result.append(takenCourses.get(i) + ";");
-                }else{
-                    result.append(takenCourses.get(i));
-                }
-            } 
+        for (int i = 0; i < takenCourses.size(); i++) {
+            if(i < takenCourses.size()-1){
+                result.append(takenCourses.get(i).getCourseID() + ";");
+            }else{
+                result.append(takenCourses.get(i).getCourseID());
+            }
+        } 
         
         
         return result.toString();

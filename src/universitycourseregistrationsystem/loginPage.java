@@ -60,9 +60,7 @@ public class loginPage extends javax.swing.JFrame {
                             
                             studentMenuPage smp = new studentMenuPage(tempStudent, allCourses);
                             
-                            smp.setVisible(true);
-                            
-                            
+                            smp.setVisible(true);   
                         }
                         
                         else if (parsedLine[indexOfTypeInfo].trim().equals(Types.PROFESSOR.toString())) {
@@ -82,6 +80,8 @@ public class loginPage extends javax.swing.JFrame {
                             
                             
                         }
+                        
+                        loginPage.this.dispose();
                     }
                     
                     
