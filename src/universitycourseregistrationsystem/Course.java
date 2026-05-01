@@ -24,6 +24,7 @@ public class Course {
     private Day day;
     private ArrayList<String> prerequisites;
     private ArrayList<Student> students; 
+    private ArrayList<Student> waitList;
     
     
     //Setters
@@ -39,6 +40,7 @@ public class Course {
     public void setDay(Day day) {this.day = day;}
     public void setPrerequisites(ArrayList<String> prerequisites) {this.prerequisites = prerequisites;}
     public void setStudents(ArrayList<Student> students) {this.students = students;}
+    public void setWaitList(ArrayList<Student> waitList) {this.waitList = waitList;}
     
     
     //Getters
@@ -54,6 +56,7 @@ public class Course {
     public Day getDay() {return day;}
     public ArrayList<String> getPrerequisites() {return prerequisites;}
     public ArrayList<Student> getStudents() {return students;}
+    public ArrayList<Student> getWaitList() {return waitList;}
     
     
     //Constructor
@@ -70,6 +73,7 @@ public class Course {
         this.day = day;
         this.prerequisites = new ArrayList<>(); //Both are initialized, methods for adding will be provided
         this.students = new ArrayList<>();
+        this.waitList = new ArrayList<>();
     }
     
        
@@ -81,4 +85,26 @@ public class Course {
     public void addPrerequisities(String preq) {
         prerequisites.add(preq);
     }
+    
+    public void addToWaitlist(Student student) {
+        waitList.add(student);
+    }
+    
+    public String toFileFormat() {
+        StringBuilder sb = new StringBuilder(courseID + "|" + courseName + "|" + departmentName + "|" 
+                + sectionNumber + "|" + maxCapacity + "|" + currentCapacity + "|" + credit + "|" 
+                + startOfTheCourse + "|" + endOfTheCourse + "|" + String.valueOf(day) + "|");
+        
+        for (int i = 0; i < waitList.size(); i++) {
+            if (i < waitList.size() - 1) {
+                sb.append(waitList.get(i).getUserID()).append(";");
+            } else {
+                sb.append(waitList.get(i).getUserID());
+            }
+        }
+        
+        return sb.toString();
+    }
+    
+    
 }

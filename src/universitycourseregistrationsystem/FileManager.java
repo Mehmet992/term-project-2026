@@ -115,6 +115,10 @@ public class FileManager {
         s1.setType(Types.STUDENT);
         s1.setUserID(line[3]);
         s1.setPassword(line[4]);
+        s1.setGPA(Double.valueOf(line[5]));
+        s1.setTotalCredit(Integer.parseInt(line[6]));
+        s1.setProbation(Boolean.valueOf(line[7]));
+        
         
         String[] currCourses = line[8].trim().split(";");
         String[] takenCourses = line[9].trim().split(";");
@@ -230,6 +234,7 @@ public class FileManager {
         }
         
         student.addCourse(courseToBeAdded);
+        student.setTotalCredit(student.getTotalCredit() + courseToBeAdded.getCredit());
         
         //Write on file
         try { 
@@ -292,7 +297,45 @@ public class FileManager {
         }
     }
     
+    public static void saveCourseFile(Course course) throws IOException{
+        ArrayList<String> allLines = new ArrayList<>();
+
+        // 1. ADIM: Dosyayı oku ve bağlantıyı hemen kapat
+        try (BufferedReader br = new BufferedReader(new FileReader(courseFileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue; // Boş satırları atla
+
+                String[] parts = line.split("\\|");
+                if (parts.length > 0 && parts[0].equals(course.getCourseID())) {
+                    allLines.add(course.toFileFormat());
+                } else {
+                    allLines.add(line);
+                }
+            }
+        } 
+
+        // 2. ADIM: Dosyayı temizle ve listeyi içine yaz
+        try (PrintWriter pw = new PrintWriter(new FileWriter(courseFileName, false))) {
+            for (String line1 : allLines) {
+                pw.println(line1);
+            }
+            pw.flush();
+        }
+    }
     
+    public static void addToWaitList(Student student, Course course) throws IOException{
+        if (course.getCurrentCapacity() >= course.getMaxCapacity()) {
+            try {
+                course.addToWaitlist(student);
+            
+                saveCourseFile(course);
+            } catch (IOException ex) {
+                throw new IOException("Something went wrong while file operation! ");
+            }
+            
+        }
+    }
     
     
     //For admin and professor

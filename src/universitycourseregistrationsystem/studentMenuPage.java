@@ -59,41 +59,55 @@ public class studentMenuPage extends javax.swing.JFrame {
                 if (enrollTextField.getText().isEmpty()) {
                      StringBuilder sb = new StringBuilder();
                      for (Course c1 : possibleCourses) {
-                         sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append(" - ").append(c1.getStartOfTheCourse()).append(" - ").append(c1.getEndOfTheCourse()).append("\n");
+                         sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append(" - ").append(c1.getStartOfTheCourse()).append(" - ").append(c1.getEndOfTheCourse()).append(" - ").append(c1.getDay()).append("\n");
                      }
 
                      textArea.setText(sb.toString());
-                     return;
-                }
-               
-                String courseID = enrollTextField.getText();
-                Course courseToBeAdded = null;
-                for (Course c1 : possibleCourses) {
-                    if (c1.getCourseID().equals(courseID)) {
-                    courseToBeAdded = c1;
-                    break;
+                } else {
+                    String courseID = enrollTextField.getText();
+                    Course courseToBeAdded = null;
+                    for (Course c1 : possibleCourses) {
+                        if (c1.getCourseID().equals(courseID)) {
+                        courseToBeAdded = c1;
+                        break;
+                        }
+                    }
+
+
+                    try {
+                        FileManager.enrollCourse(student, courseToBeAdded, courseID);
+                        JOptionPane.showMessageDialog(rootPane, "The Course with ID: " + courseID + " has successfully added! ");
+                    } catch (CourseNotFoundException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (StudentOnProbationException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (MaxNumberOfCourseException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (CourseFullException ex){
+                        int choice = JOptionPane.showConfirmDialog(rootPane,
+                                "This Course is full right now! Do you want to be on Wait List? ",
+                                "Course Full!",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE);
+                        
+                        if (choice == JOptionPane.YES_OPTION) {
+                            try {
+                               FileManager.addToWaitList(student, courseToBeAdded);
+                               JOptionPane.showMessageDialog(rootPane, "The Student has successfully added to waitlist for the course with ID: " + courseID);
+                            } catch (IOException ex1) {
+                                JOptionPane.showMessageDialog(rootPane, ex1.getMessage());
+                            }
+                        }
+                    } catch (ScheduleConflictException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (PrerequisiteNotMetException ex){
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                     }
                 }
+               
                 
-                
-                try {
-                    FileManager.enrollCourse(student, courseToBeAdded, courseID);
-                    JOptionPane.showMessageDialog(rootPane, "The Course with ID: " + courseID + " has successfully added! ");
-                } catch (CourseNotFoundException ex){
-                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                } catch (StudentOnProbationException ex){
-                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                } catch (MaxNumberOfCourseException ex){
-                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                } catch (CourseFullException ex){
-                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                } catch (ScheduleConflictException ex){
-                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                } catch (PrerequisiteNotMetException ex){
-                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                }
                
             } 
         });
@@ -108,7 +122,7 @@ public class studentMenuPage extends javax.swing.JFrame {
                     //Show the current courses
                     StringBuilder sb = new StringBuilder();
                     for (Course c1 : student.getCourses()) {
-                        sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append("\n");
+                        sb.append(c1.getCourseID()).append(" - ").append(c1.getCourseName()).append(" - ").append(c1.getStartOfTheCourse()).append(" - ").append(c1.getEndOfTheCourse()).append(" - ").append(c1.getDay()).append("\n");
                     }
                     
                     textArea.setText(sb.toString());
@@ -126,7 +140,7 @@ public class studentMenuPage extends javax.swing.JFrame {
                         return;
                     }
 
-                    try {
+                    try { //DROP COURSE YAPILDIĞI ZAMAN WAİTLİSTTE BİRİSİ VARSA ONU DERSE EKLE!
                         FileManager.dropCourse(student, c);
                         JOptionPane.showMessageDialog(rootPane, "The Course with ID: " + courseID + " has successfully dropped! ");
                     } catch (CourseNotFoundException ex) {
