@@ -6,6 +6,8 @@ package universitycourseregistrationsystem;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.HashMap;
 
 /**
  *
@@ -24,7 +26,7 @@ public class Course {
     private Day day;
     private ArrayList<String> prerequisites;
     private ArrayList<Student> students; 
-    private ArrayList<Student> waitList;
+    private LinkedList<Student> waitList;
     
     
     //Setters
@@ -40,7 +42,7 @@ public class Course {
     public void setDay(Day day) {this.day = day;}
     public void setPrerequisites(ArrayList<String> prerequisites) {this.prerequisites = prerequisites;}
     public void setStudents(ArrayList<Student> students) {this.students = students;}
-    public void setWaitList(ArrayList<Student> waitList) {this.waitList = waitList;}
+    public void setWaitList(LinkedList<Student> waitList) {this.waitList = waitList;}
     
     
     //Getters
@@ -56,7 +58,7 @@ public class Course {
     public Day getDay() {return day;}
     public ArrayList<String> getPrerequisites() {return prerequisites;}
     public ArrayList<Student> getStudents() {return students;}
-    public ArrayList<Student> getWaitList() {return waitList;}
+    public LinkedList<Student> getWaitList() {return waitList;}
     
     
     //Constructor
@@ -73,13 +75,12 @@ public class Course {
         this.day = day;
         this.prerequisites = new ArrayList<>(); //Both are initialized, methods for adding will be provided
         this.students = new ArrayList<>();
-        this.waitList = new ArrayList<>();
+        this.waitList = new LinkedList<>();
     }
     
        
     public void addStudent(Student s1) {
         students.add(s1);
-        currentCapacity++;
     }
     
     public void addPrerequisities(String preq) {
@@ -91,9 +92,19 @@ public class Course {
     }
     
     public String toFileFormat() {
-        StringBuilder sb = new StringBuilder(courseID + "|" + courseName + "|" + departmentName + "|" 
+        StringBuilder sb = new StringBuilder(courseName + "|" + departmentName + "|" + courseID + "|" 
                 + sectionNumber + "|" + maxCapacity + "|" + currentCapacity + "|" + credit + "|" 
                 + startOfTheCourse + "|" + endOfTheCourse + "|" + String.valueOf(day) + "|");
+        
+        for (int i = 0; i < prerequisites.size(); i++) {
+            if (i < prerequisites.size() - 1) {
+                sb.append(prerequisites.get(i)).append(";");
+            } else {
+                sb.append(prerequisites.get(i));
+            }
+        }
+        
+        sb.append("|");
         
         for (int i = 0; i < waitList.size(); i++) {
             if (i < waitList.size() - 1) {

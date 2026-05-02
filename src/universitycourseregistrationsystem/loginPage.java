@@ -12,13 +12,15 @@ package universitycourseregistrationsystem;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class loginPage extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(loginPage.class.getName());
     
-    ArrayList<Course> allCourses = new ArrayList<>();
+    HashMap<String, Course> allCourses = new HashMap<>();
+    HashMap<String, Student> allStudents = new HashMap<>();
     
     public loginPage() {
         initComponents();
@@ -28,7 +30,9 @@ public class loginPage extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         
         try {
-            allCourses = FileManager.initAllCourses();
+            allStudents = FileManager.initAllStudents();
+            allCourses = FileManager.initAllCourses(allStudents);
+            FileManager.initStudentCourses(allStudents, allCourses);
         } catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(rootPane, " File not found during initializing courses! ");
         } catch (IOException ex) {
@@ -50,20 +54,14 @@ public class loginPage extends javax.swing.JFrame {
                     //Parsing the information into its elements
                     String[] parsedLine = userLine.split("\\|");
                     
-                    int indexOfTypeInfo = 2;
-                    
                     if (FileManager.isPasswordCorrect(parsedLine, password)) {
-                        if (parsedLine[indexOfTypeInfo].trim().equals(Types.STUDENT.toString())) {
-                            //Create the student object with the given information line and pass to the studentMenuPage
-                            Student tempStudent = new Student();
-                            FileManager.initStudent(tempStudent, parsedLine, allCourses);
-                            
-                            studentMenuPage smp = new studentMenuPage(tempStudent, allCourses);
+                        if (parsedLine[2].trim().equals(Types.STUDENT.toString())) {
+                            studentMenuPage smp = new studentMenuPage(allStudents.get(parsedLine[3]), allCourses);
                             
                             smp.setVisible(true);   
                         }
                         
-                        else if (parsedLine[indexOfTypeInfo].trim().equals(Types.PROFESSOR.toString())) {
+                        else if (parsedLine[2].trim().equals(Types.PROFESSOR.toString())) {
                             //Create the professor object with the given information line and pass to the professorMenuPage
                             professorMenuPage pmp = new professorMenuPage();
                             
@@ -72,7 +70,7 @@ public class loginPage extends javax.swing.JFrame {
                             
                         }
                         
-                        else if (parsedLine[indexOfTypeInfo].trim().equals(Types.ADMIN.toString())) {
+                        else if (parsedLine[2].trim().equals(Types.ADMIN.toString())) {
                             //Create the admin object with the given information line and pass to the adminMenuPage
                             adminMenuPage amp = new adminMenuPage();
                             

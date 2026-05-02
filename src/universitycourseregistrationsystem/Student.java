@@ -133,6 +133,7 @@ public class Student extends User{
         //Capacity, Schedule and Prerequisites are checked, add the course.
         courses.add(c1);
         c1.addStudent(this);
+        c1.setCurrentCapacity(c1.getCurrentCapacity() + 1);
         
     }
     

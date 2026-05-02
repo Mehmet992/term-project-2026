@@ -7,13 +7,15 @@ package universitycourseregistrationsystem;
 import java.io.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 
 public class studentMenuPage extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(studentMenuPage.class.getName());
-    public studentMenuPage(Student student, ArrayList<Course> allCourses) {
+    public studentMenuPage(Student student, HashMap<String, Course> allCourses) {
         initComponents();
         
         this.setSize(500, 400);
@@ -128,12 +130,7 @@ public class studentMenuPage extends javax.swing.JFrame {
                     textArea.setText(sb.toString());
                 } else {
                     Course c = null;
-                    for (Course course : allCourses) {
-                        if (course.getCourseID().equals(courseID)) {
-                            c = course;
-                            break;
-                        }
-                    }
+                    c = allCourses.get(courseID);
 
                     if (c == null) {
                         JOptionPane.showMessageDialog(rootPane, "No Course with ID: " + courseID);
@@ -143,6 +140,7 @@ public class studentMenuPage extends javax.swing.JFrame {
                     try { //DROP COURSE YAPILDIĞI ZAMAN WAİTLİSTTE BİRİSİ VARSA ONU DERSE EKLE!
                         FileManager.dropCourse(student, c);
                         JOptionPane.showMessageDialog(rootPane, "The Course with ID: " + courseID + " has successfully dropped! ");
+                        //JOptionPane.showMessageDialog(rootPane, "The student" + c.getStudents().get(c.getStudents().size() - 1).getName() + "in the waitlist of the course: " + c.getCourseID() + " has been added to the course!");
                     } catch (CourseNotFoundException ex) {
                         JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                     } catch (IOException ex) {

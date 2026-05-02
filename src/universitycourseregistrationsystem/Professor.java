@@ -16,15 +16,16 @@ public class Professor extends User {
     
     public Professor(String name, String surname, Types type, String password, String userID) {
         super(name, surname, type, password, userID);
+        givenCourses = new ArrayList<>();
     }
       
     
     @Override
     public String toFileFormat() {
-        StringBuilder result = new StringBuilder(super.toFileFormat() + "|");
+        StringBuilder result = new StringBuilder(super.toFileFormat());
         if (!givenCourses.isEmpty()) {
             for (Course c1: givenCourses) {
-                result.append(c1.getCourseName() + "|");
+                result.append(c1.getCourseID() + ";");
             }
         }
         

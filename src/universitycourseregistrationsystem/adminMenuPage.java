@@ -31,19 +31,39 @@ public class adminMenuPage extends javax.swing.JFrame {
         
         btnSaveUser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               try{
-                   String typeInput = typeField.getText().trim().toUpperCase();
-                   Types type = Types.valueOf(typeInput);
-                   Student newStudent = new Student(nameField.getText(), surnameField.getText(), type, passwordField.getText(), idField.getText());
-                   FileManager.saveUser(newStudent);
-                   JOptionPane.showMessageDialog(rootPane, "User successfully saved!");
-               }catch(IOException ex){
-                   JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
-               }catch(IllegalArgumentException ex){
-                   JOptionPane.showMessageDialog(rootPane, "Invalid Type! Please write STUDENT/PROFESSOR/ADMIN!");
-               }catch(Exception ex){
-                   ex.getMessage();
-               }
+                String typeInput = typeField.getText().trim().toUpperCase();
+                
+                //Empty field check
+                if(nameField.getText().isEmpty() || surnameField.getText().isEmpty() || idField.getText().isEmpty() || typeField.getText().isEmpty() || passwordField.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(rootPane, "Empty field(s), please fill in all fields!");
+                    return;
+                }
+                
+                try{
+                    Types type = Types.valueOf(typeInput); // String -> enum
+                    User newUser;
+                    if(type == Types.STUDENT){
+                        newUser = new Student(nameField.getText(), surnameField.getText(), type, passwordField.getText(), idField.getText());
+                    }else if(type == Types.PROFESSOR){
+                        newUser = new Professor(nameField.getText(), surnameField.getText(), type, passwordField.getText(), idField.getText());
+                    }else{
+                        throw new IllegalArgumentException(); //Throwing the exception when other types are written
+                    }
+                    
+                    FileManager.saveUser(newUser); //Saving the new user to user file
+                    JOptionPane.showMessageDialog(rootPane, "User successfully saved!");
+                    nameField.setText("");
+                    surnameField.setText("");
+                    typeField.setText("");
+                    passwordField.setText("");
+                    idField.setText("");
+                }catch(IllegalArgumentException ex){
+                    JOptionPane.showMessageDialog(rootPane, "Invalid Type! Please write STUDENT or PROFESSOR!");
+                }catch(IOException ex){
+                    JOptionPane.showMessageDialog(rootPane, "File Error: " + ex.getMessage());
+                }catch(Exception ex){
+                    ex.printStackTrace(); //Showing other exception messages in the console
+                }
             } 
         });
         
@@ -167,7 +187,8 @@ public class adminMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 40, 0, 0);
         getContentPane().add(nameLabel, gridBagConstraints);
 
-        idField.setPreferredSize(new java.awt.Dimension(60, 50));
+        idField.setMinimumSize(new java.awt.Dimension(70, 30));
+        idField.setPreferredSize(new java.awt.Dimension(70, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 2;
@@ -178,7 +199,8 @@ public class adminMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(20, 0, 0, 0);
         getContentPane().add(idField, gridBagConstraints);
 
-        nameField.setPreferredSize(new java.awt.Dimension(60, 50));
+        nameField.setMinimumSize(new java.awt.Dimension(70, 30));
+        nameField.setPreferredSize(new java.awt.Dimension(70, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -199,7 +221,8 @@ public class adminMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(20, 40, 0, 0);
         getContentPane().add(surnameLabel, gridBagConstraints);
 
-        surnameField.setPreferredSize(new java.awt.Dimension(60, 50));
+        surnameField.setMinimumSize(new java.awt.Dimension(70, 30));
+        surnameField.setPreferredSize(new java.awt.Dimension(70, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -210,7 +233,8 @@ public class adminMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(20, 10, 0, 0);
         getContentPane().add(surnameField, gridBagConstraints);
 
-        passwordField.setPreferredSize(new java.awt.Dimension(60, 50));
+        passwordField.setMinimumSize(new java.awt.Dimension(70, 30));
+        passwordField.setPreferredSize(new java.awt.Dimension(70, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 1;
@@ -240,7 +264,8 @@ public class adminMenuPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 20, 0, 0);
         getContentPane().add(passwordLabel, gridBagConstraints);
 
-        typeField.setPreferredSize(new java.awt.Dimension(60, 50));
+        typeField.setMinimumSize(new java.awt.Dimension(70, 30));
+        typeField.setPreferredSize(new java.awt.Dimension(70, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
