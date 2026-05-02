@@ -1,11 +1,15 @@
-CENG100|Introduction to Programming 0|Computer Engineering|1|90|0|6|09:40|11:30|MONDAY|NONE|
-CENG101|Introduction to Programming 1|Computer Engineering|1|90|0|6|16:40|18:30|MONDAY|CENG100|
-CENG102|Introduction to Programming 2|Computer Engineering|1|90|0|6|11:40|13:30|MONDAY|CENG101;CENG100|
-MATH2260|Introduction to Math 0|Computer Engineering|1|90|0|6|09:40|11:30|MONDAY|NONE|
-MATH2261|Introduction to Math 1|Computer Engineering|1|2|2|6|15:40|18:30|MONDAY|24070001009
-PHYS1050|Introduction to Physics 0|Computer Engineering|1|90|0|6|11:40|13:30|MONDAY|NONE|
-PHYS1051|Introduction to Physics 1|Computer Engineering|1|90|0|6|13:40|15:30|TUESDAY|PHYS1050|
-ENG100|Academic English 0|International Relationships|1|90|0|6|11:40|13:30|WEDNESDAY|NONE|
-ENG101|Academic English 1|International Relationships|1|90|0|6|13:40|15:30|WEDNESDAY|ENG100|
-GERM100|Academic German 0|International Relationships|1|90|0|6|15:40|17:30|WEDNESDAY|NONE|
-GERM101|Academic German 1|International Relationships|1|90|0|6|18:40|20:30|WEDNESDAY|GERM100|
+Introduction to Programming 0|Computer Engineering|CENG100|1|90|0|6|09:40|11:30|MONDAY|NONE|NONE
+Introduction to Programming I|Computer Engineering|CENG101|2|50|1|5|11:40|14:30|MONDAY||
+Introduction to Programming 2|Computer Engineering|CENG102|1|90|0|6|11:40|13:30|MONDAY|CENG101;CENG100|NONE
+Introduction to Math 0|Computer Engineering|MATH2260|1|90|0|6|09:40|11:30|MONDAY|NONE|NONE
+Introduction to Math 1|Computer Engineering|MATH2261|1|2|2|6|15:40|18:30|MONDAY||24070001010
+Introduction to Physics 0|Computer Engineering|PHYS1050|1|90|0|6|11:40|13:30|MONDAY|NONE|NONE
+Introduction to Physics 1|Computer Engineering|PHYS1051|1|90|1|6|13:40|15:30|TUESDAY|PHYS1050|
+Academic English 0|International Relationships|ENG100|1|90|0|6|11:40|13:30|WEDNESDAY|NONE|NONE
+Academic English 1|International Relationships|ENG101|1|90|1|6|13:40|15:30|WEDNESDAY|ENG100|
+Academic German 0|International Relationships|GERM100|1|90|1|6|15:40|17:30|WEDNESDAY||
+Academic German 1|International Relationships|GERM101|1|90|0|6|18:40|20:30|WEDNESDAY|GERM100|NONE
+Calculus I|Mathematics|MATH101|1|60|0|6|08:40|11:30|MONDAY|NONE|NONE
+Calculus I|Mathematics|MATH101|2|60|0|6|11:40|14:30|MONDAY|NONE|NONE
+Introduction to Programming I|Computer Engineering|CENG101|2|50|1|5|11:40|14:30|MONDAY||
+Introduction to Programming I|Computer Engineering|CENG101|2|50|1|5|11:40|14:30|MONDAY||
