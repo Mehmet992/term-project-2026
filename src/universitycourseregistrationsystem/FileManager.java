@@ -20,12 +20,10 @@ public class FileManager {
     
     
     public static void saveUser(User u1) throws IOException{
-        FileWriter fw = new FileWriter(userFileName, true); // true = append mode
-        BufferedWriter bw = new BufferedWriter(fw);
-        
-        bw.write(u1.toFileFormat());
-        bw.newLine();
-        bw.close();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(userFileName, true))) {
+            bw.write(u1.toFileFormat());
+            bw.newLine(); 
+        }
     }
     
     public static boolean deleteUser(String targetID){
@@ -82,7 +80,8 @@ public class FileManager {
         
         
         while((line = br.readLine()) != null) {
-            if (line.contains(id)) {
+            String[] splittedLine = line.split("\\|");
+            if (splittedLine.length > 3 && splittedLine[3].equals(id)) {
                 sb.append(line).append("\n");
             }
         }
@@ -99,7 +98,7 @@ public class FileManager {
         int indexOfPassword = 4;
         
         //Don't need to check whether the data is correct or not for the project -> yet, it will throw the exception
-        if (line[indexOfPassword].trim().equals(password)) {
+        if (line[indexOfPassword].trim().equals(password.trim())) {
             return true;
         }
         
@@ -122,6 +121,9 @@ public class FileManager {
         String line;
         
         while ((line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) {
+                continue;
+            }
             String[] ln = line.split("\\|", -1);
             
             //String courseName, String departmentName, String courseID, int sectionNumber, int maxCapacity, int currentCapacity, int credit, String startOfTheCourse, String endOfTheCourse, Day day
@@ -166,6 +168,10 @@ public class FileManager {
         String line;
         
         while ((line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+            
             String[] parts = line.split("\\|");
             
             if (!parts[2].toUpperCase().equals(Types.STUDENT.toString())) continue;

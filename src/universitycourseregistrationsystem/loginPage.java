@@ -48,12 +48,12 @@ public class loginPage extends javax.swing.JFrame {
                    
                     
                     String userLine = FileManager.searchUserByID1(idField.getText());
-                    String password = passwordField.getText();
+                    String password = passwordField.getText().trim();
                     
                     //Parsing the information into its elements
                     String[] parsedLine = userLine.split("\\|");
                     
-                    if (FileManager.isPasswordCorrect(parsedLine, password)) {
+                    if (FileManager.isPasswordCorrect(parsedLine, password.trim())) {
                         if (parsedLine[2].trim().equals(Types.STUDENT.toString())) {
                             studentMenuPage smp = new studentMenuPage(allStudents.get(parsedLine[3]), allCourses);
                             System.out.println("Student object is initialized! ID: " + allStudents.get(parsedLine[3]).getUserID());
