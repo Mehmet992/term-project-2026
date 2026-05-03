@@ -198,4 +198,20 @@ public class Student extends User{
         
         return result.toString();
     }
+    
+    public void changeGrade(int index, String grade) {
+        grades.set(index, Integer.valueOf(grade));
+    }
+    
+    public int getGradeOfTheCourse(Course c) {
+        int indexOfCourse = 0;
+        for (int i = 0; i < courses.size(); i++) {
+            if (courses.get(i).equals(c)) {
+                indexOfCourse = i; 
+                break;
+            }
+        }
+        
+        return grades.get(indexOfCourse);
+    } 
 }

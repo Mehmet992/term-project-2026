@@ -145,6 +145,7 @@ public class FileManager {
             }
             
             allCourses.put(ln[2], tempCourse);
+            System.out.println(tempCourse.getCourseID());
         }
         
         br.close();
@@ -251,6 +252,24 @@ public class FileManager {
         }
         
         br.close();
+    }
+    
+    public static Professor initProfessor(String[] line, HashMap<String, Course> allCourses) {
+        //Name, surname, type, id, password
+        Professor professor = new Professor(line[0], line[1], Types.PROFESSOR, line[4], line[3]);
+        
+        if (!line[5].isEmpty()) {
+            String[] courses = line[5].trim().split(";");
+            
+            for (String courseID : courses) {
+                if (allCourses.containsKey(courseID.trim())) {
+                    professor.addCourse(allCourses.get(courseID.trim()));
+                    System.out.println("added " + courseID);
+                }
+            }
+        }
+        
+        return professor;
     }
     
     public static ArrayList<Course> returnPossibleCourses(Student student, HashMap<String, Course> allCourses) {
@@ -421,6 +440,7 @@ public class FileManager {
     
     public static void saveCourseFile(Course course) throws IOException{
         ArrayList<String> allLines = new ArrayList<>();
+        Boolean courseFound = false;
 
         // 1. ADIM: Dosyayı oku ve bağlantıyı hemen kapat
         try (BufferedReader br = new BufferedReader(new FileReader(courseFileName))) {
@@ -430,7 +450,40 @@ public class FileManager {
 
                 String[] parts = line.split("\\|");
                 if (parts.length > 0 && parts[2].equals(course.getCourseID())) {
+                    courseFound = true;
                     allLines.add(course.toFileFormat());
+                } else {
+                    allLines.add(line);
+                }
+            }
+        } 
+        
+        //If course is a new course add it to the database
+        if (!courseFound) {
+            allLines.add(course.toFileFormat());
+        }
+
+        // 2. ADIM: Dosyayı temizle ve listeyi içine yaz
+        try (PrintWriter pw = new PrintWriter(new FileWriter(courseFileName, false))) {
+            for (String line1 : allLines) {
+                pw.println(line1);
+            }
+            pw.flush();
+        }
+    }
+    
+    public static void saveProfessorFile(Professor professor) throws IOException {
+        ArrayList<String> allLines = new ArrayList<>();
+
+        // 1. ADIM: Dosyayı oku ve bağlantıyı hemen kapat
+        try (BufferedReader br = new BufferedReader(new FileReader(userFileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue; // Boş satırları atla
+
+                String[] parts = line.split("\\|");
+                if (parts.length > 0 && parts[3].equals(professor.getUserID())) {
+                    allLines.add(professor.toFileFormat());
                 } else {
                     allLines.add(line);
                 }
@@ -438,7 +491,7 @@ public class FileManager {
         } 
 
         // 2. ADIM: Dosyayı temizle ve listeyi içine yaz
-        try (PrintWriter pw = new PrintWriter(new FileWriter(courseFileName, false))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(userFileName, false))) {
             for (String line1 : allLines) {
                 pw.println(line1);
             }

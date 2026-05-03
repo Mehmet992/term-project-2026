@@ -62,7 +62,10 @@ public class loginPage extends javax.swing.JFrame {
                         
                         else if (parsedLine[2].trim().equals(Types.PROFESSOR.toString())) {
                             //Create the professor object with the given information line and pass to the professorMenuPage
-                            professorMenuPage pmp = new professorMenuPage();
+                            Professor professor = FileManager.initProfessor(parsedLine , allCourses);
+                            System.out.println("Professor object is created! " + professor.getUserID());
+                            
+                            professorMenuPage pmp = new professorMenuPage(professor, allCourses, allStudents);
                             
                             pmp.setVisible(true);
                             

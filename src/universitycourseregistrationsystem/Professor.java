@@ -18,14 +18,30 @@ public class Professor extends User {
         super(name, surname, type, password, userID);
         givenCourses = new ArrayList<>();
     }
+    
+    //Getter(s)
+    public ArrayList<Course> getGivenCourses() {return this.givenCourses;}
+    
+    public Professor() {
+        super();
+        givenCourses = new ArrayList<>();
+    }
+    
+    public void addCourse(Course c) {
+        givenCourses.add(c);
+    }
       
     
     @Override
     public String toFileFormat() {
         StringBuilder result = new StringBuilder(super.toFileFormat());
         if (!givenCourses.isEmpty()) {
-            for (Course c1: givenCourses) {
-                result.append(c1.getCourseID() + ";");
+            for (int i = 0; i < givenCourses.size(); i++) {
+                if (i < givenCourses.size() - 1) {
+                    result.append(givenCourses.get(i).getCourseID() + ";");
+                } else {
+                    result.append(givenCourses.get(i).getCourseID());
+                }
             }
         }
         
