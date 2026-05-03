@@ -7,7 +7,6 @@ package universitycourseregistrationsystem;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.HashMap;
 
 /**
  *

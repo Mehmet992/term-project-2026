@@ -5,6 +5,7 @@
 package universitycourseregistrationsystem;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -16,6 +17,7 @@ public class Student extends User{
     private Boolean onProbation; //check when setting probation whether they have more than 4 lessons or not
     private ArrayList<Course> courses;
     private ArrayList<Course> takenCourses;
+    private LinkedList<Integer> grades;
     
     //Setters
     public void setProbation(Boolean onProbation) {this.onProbation = onProbation;}
@@ -26,6 +28,7 @@ public class Student extends User{
     public void setPassword(String password) {super.setPassword(password);}
     public void setUserID(String userID) {super.setUserID(userID);}
     public void setTotalCredit(int totalCredit) {this.totalCredit = totalCredit;}
+    public void setGrades(LinkedList<Integer> grades) {this.grades = grades;}
     
     //Getters
     public double getGPA() {return this.gpa;}
@@ -33,6 +36,7 @@ public class Student extends User{
     public Boolean getOnProbation() {return this.onProbation;}
     public ArrayList<Course> getCourses() {return this.courses;}
     public ArrayList<Course> getTakenCourses() {return this.takenCourses;}
+    public LinkedList<Integer> getGrades() {return this.grades;}
     
     //Constructor function
     public Student(String name, String surname, Types type, String password, String userID) {
@@ -42,6 +46,7 @@ public class Student extends User{
         this.onProbation = false; //Initialized as false
         courses = new ArrayList<>();
         takenCourses = new ArrayList<>();
+        grades = new LinkedList<>();
     }
     
     public Student() {
@@ -51,6 +56,7 @@ public class Student extends User{
         this.onProbation = false; //Initialized as false
         courses = new ArrayList<>();
         takenCourses = new ArrayList<>();
+        grades = new LinkedList<>();
     }
     
     //Construct the methods of adding Courses to the Student's 'courses' ArrayList
@@ -133,22 +139,33 @@ public class Student extends User{
         //Capacity, Schedule and Prerequisites are checked, add the course.
         courses.add(c1);
         c1.addStudent(this);
-        c1.setCurrentCapacity(c1.getCurrentCapacity() + 1);
-        
+        c1.setCurrentCapacity(c1.getCurrentCapacity() + 1);    
     }
     
-    public static void calculateGPA() {
+    public void calculateGPA() {
+        double res = 0.0;
+        for (int i = 0; i < grades.size(); i++) {
+            res += ((double)courses.get(i).getCredit() * (grades.get(i) * 0.04));
+        }
         
+        this.gpa = res / totalCredit;
+    }
+    
+    public void checkProbation() {
+        this.onProbation = (this.gpa < 2.0);
     }
     
     public void addTakenCourse(Course c1) {
         takenCourses.add(c1);
-        //calculateGPA(); //Calculate the new GPA
+    }
+    
+    public void addGrade(int grade) {
+        grades.add(grade);
     }
     
     @Override
     public String toFileFormat() {
-        StringBuilder result = new StringBuilder(super.toFileFormat() + gpa + "|" + totalCredit + "|" + onProbation + "|");
+        StringBuilder result = new StringBuilder(super.toFileFormat() + String.format("%.2f", gpa) + "|" + totalCredit + "|" + onProbation + "|");
         
         for (int i = 0; i < courses.size(); i++) {
             if(i < courses.size()-1){
@@ -166,7 +183,17 @@ public class Student extends User{
             }else{
                 result.append(takenCourses.get(i).getCourseID());
             }
-        } 
+        }
+        
+        result.append("|");
+        
+        for (int i = 0; i < grades.size(); i++) {
+            if (i < grades.size() - 1) {
+                result.append(grades.get(i).toString() + ";");
+            } else {
+                result.append(grades.get(i).toString());
+            }
+        }
         
         
         return result.toString();

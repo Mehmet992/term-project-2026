@@ -40,8 +40,10 @@ public class studentMenuPage extends javax.swing.JFrame {
                
                res.append("\n").append("----- Current Courses -----").append("\n");
                
+               int i = 0;
                for (Course c1 : studentCourses) {
-                   res.append(c1.getCourseName()).append("\n");
+                   res.append(c1.getCourseName()).append(" - ").append(student.getGrades().get(i)).append("\n");
+                   i++;
                }
                
                res.append("\n").append("----- Taken Courses -----").append("\n");
@@ -108,9 +110,7 @@ public class studentMenuPage extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                     }
                 }
-               
-                
-               
+                 
             } 
         });
         

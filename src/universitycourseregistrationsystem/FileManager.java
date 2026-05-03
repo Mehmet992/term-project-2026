@@ -127,7 +127,7 @@ public class FileManager {
             Course tempCourse = new Course(ln[0], ln[1], ln[2], Integer.parseInt(ln[3]), Integer.parseInt(ln[4]), 0, Integer.parseInt(ln[6]), ln[7], ln[8], Day.valueOf(ln[9]));
             
             //If course has no prerequisities, continue
-            if (!ln[10].equalsIgnoreCase("NONE")) {
+            if (!ln[10].equalsIgnoreCase("NONE") && !ln[10].isEmpty()) {
                 String[] preqs = ln[10].split(";");
             
                 for (String prq : preqs) {
@@ -136,7 +136,7 @@ public class FileManager {
             }
             
             //Add the students in waitlist
-            if(!ln[11].equalsIgnoreCase("NONE")) {
+            if(!ln[11].equalsIgnoreCase("NONE") && !ln[11].isEmpty()) {
                 String[] waitlistStudents = ln[11].split(";");
                 
                 for (String st : waitlistStudents) {
@@ -237,6 +237,17 @@ public class FileManager {
                     }
                 }
             }
+            
+            //Add current grades
+            if (!parts[10].isEmpty()) {
+                String[] grades = parts[10].split(";");
+                
+                for (int i = 0; i < grades.length; i++) {
+                    int intGrade = Integer.parseInt(grades[i]);
+                    
+                    tempStudent.addGrade(intGrade);
+                }
+            }
         }
         
         br.close();
@@ -259,12 +270,12 @@ public class FileManager {
             ArrayList<String> preqs = c1.getPrerequisites();
             Boolean allPreqsMet = true;
                        
-            if (!preqs.isEmpty()) {
+            if (!preqs.isEmpty() && !preqs.get(0).equalsIgnoreCase("NONE")) {
             for (String preq : preqs) {
                 if (!takenCourseIDs.contains(preq)) {
                     allPreqsMet = false;
                     }
-                 }
+                }
             }
                        
             if (allPreqsMet) {
@@ -289,9 +300,11 @@ public class FileManager {
             throw new MaxNumberOfCourseException("Max number of courses! ");
         }
         
-        student.addCourse(courseToBeAdded);
+        student.addCourse(courseToBeAdded); //The course is the last course added to the list
         student.setTotalCredit(student.getTotalCredit() + courseToBeAdded.getCredit());
-        //courseToBeAdded.setCurrentCapacity(courseToBeAdded.getCurrentCapacity() + 1);
+        student.addGrade(0); //Add the last grade as 0
+        student.calculateGPA();
+        student.checkProbation();
         
         //Write on file
         try { 
@@ -304,11 +317,22 @@ public class FileManager {
     
     public static void dropCourse(Student student, Course c) throws CourseNotFoundException, IOException {
         if (c != null) {
-            Boolean isRemoved = student.getCourses().removeIf(course -> course.getCourseID().equals(c.getCourseID())); 
-            if (isRemoved) {
+            int foundIndex = -1;
+            for (int i = 0; i < student.getCourses().size(); i++) {
+                if (student.getCourses().get(i).getCourseID().equals(c.getCourseID())) {
+                    foundIndex = i;
+                    break;
+                }
+            }
+            
+            if (foundIndex != -1) {
                 try {
                     //Decrease the student's credit by dropped course credit
                     student.setTotalCredit(student.getTotalCredit() - c.getCredit());
+                    
+                    //Exclude the grade and course from student
+                    student.getCourses().remove(foundIndex);
+                    student.getGrades().remove(foundIndex);
 
                     //Remove the student from Course
                     c.getStudents().removeIf(st -> st.getUserID().equals(student.getUserID()));
@@ -316,11 +340,18 @@ public class FileManager {
                     //Decrease the capacity of the Course
                     c.setCurrentCapacity(c.getCurrentCapacity() - 1);
                     
-                    checkWaitlist(c);
-
-                    //Save the file
-                    saveStudentFile(student);
-                    saveCourseFile(c);
+                    if (checkWaitlist(c)) {
+                        //Course file is already saved and gpa, probation checks already done!
+                        saveStudentFile(student);
+                        
+                    } else {
+                        student.calculateGPA();
+                        student.checkProbation();
+                        
+                        //Save the file
+                        saveStudentFile(student);
+                        saveCourseFile(c);
+                    }
                 } catch (IOException ex) {
                     throw new IOException("Something went wrong while file operation! ");
                 }
@@ -328,6 +359,37 @@ public class FileManager {
                 throw new CourseNotFoundException("Course with ID: " + c.getCourseID() + " is not found! ");
             }
         }    
+    }
+    
+    public static void addToWaitList(Student student, Course course) throws IOException{
+        if (course.getCurrentCapacity() >= course.getMaxCapacity()) {
+            try {
+                course.addToWaitlist(student);
+            
+                saveCourseFile(course);
+            } catch (IOException ex) {
+                throw new IOException("Something went wrong while file operation! ");
+            }
+            
+        }
+    }
+    
+    public static Boolean checkWaitlist(Course c) throws IOException {
+        //When a student drops the course c, check the waitlist of the course and if there any student, enroll him to the course
+        if (!c.getWaitList().isEmpty()) {
+            try {
+                Student stToBeAdded = c.getWaitList().remove(0); //Removes the first student and returns it
+                
+                enrollCourse(stToBeAdded, c, c.getCourseID());
+                saveCourseFile(c);
+                return true;
+            } catch (CourseNotFoundException | PrerequisiteNotMetException | ScheduleConflictException | StudentOnProbationException | MaxNumberOfCourseException | CourseFullException ex) {
+                checkWaitlist(c); //The student is not available, try to next one
+            } catch (IOException ex) {
+                throw new IOException("Something went wrong while file operation! ");
+            }  
+        }
+        return false; 
     }
     
     public static void saveStudentFile(Student student) throws IOException {
@@ -384,35 +446,6 @@ public class FileManager {
         }
     }
     
-    public static void addToWaitList(Student student, Course course) throws IOException{
-        if (course.getCurrentCapacity() >= course.getMaxCapacity()) {
-            try {
-                course.addToWaitlist(student);
-            
-                saveCourseFile(course);
-            } catch (IOException ex) {
-                throw new IOException("Something went wrong while file operation! ");
-            }
-            
-        }
-    }
-    
-    public static void checkWaitlist(Course c) throws IOException {
-        //When a student drops the course c, check the waitlist of the course and if there any student, enroll him to the course
-        if (!c.getWaitList().isEmpty()) {
-            try {
-                Student stToBeAdded = c.getWaitList().remove(0); //Removes the first student and returns it
-                
-                enrollCourse(stToBeAdded, c, c.getCourseID());
-                saveCourseFile(c);
-            } catch (CourseNotFoundException | PrerequisiteNotMetException | ScheduleConflictException | StudentOnProbationException | MaxNumberOfCourseException | CourseFullException ex) {
-                checkWaitlist(c); //The student is not available, try to next one
-            } catch (IOException ex) {
-                throw new IOException("Something went wrong while file operation! ");
-            }
-            
-        }
-    }
     //For admin and professor
 
     
