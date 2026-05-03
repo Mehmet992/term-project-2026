@@ -11,8 +11,8 @@ public class professorMenuPage extends javax.swing.JFrame {
     public professorMenuPage(Professor professor, HashMap<String, Course> allCourses, HashMap<String, Student> allStudents) {
         initComponents();
         
+        this.setTitle(professor.getName() + " " + professor.getSurname() + " - PROFESSOR");
         this.setSize(500, 400);
-        
         this.setLocationRelativeTo(null);
         
         //Create course 

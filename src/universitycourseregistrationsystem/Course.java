@@ -4,9 +4,10 @@
  */
 package universitycourseregistrationsystem;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -69,8 +70,11 @@ public class Course {
         this.maxCapacity = maxCapacity;
         this.currentCapacity = currentCapacity; //Initialized as 0
         this.credit = credit;
-        this.startOfTheCourse = LocalTime.parse(startOfTheCourse); //In the format of "09:00"
-        this.endOfTheCourse = LocalTime.parse(endOfTheCourse);
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+        this.startOfTheCourse = LocalTime.parse(startOfTheCourse.trim(), formatter); //In the format of "09:00" or "9:00"
+        this.endOfTheCourse = LocalTime.parse(endOfTheCourse.trim(), formatter);
+        
         this.day = day;
         this.prerequisites = new ArrayList<>(); //Both are initialized, methods for adding will be provided
         this.students = new ArrayList<>();

@@ -24,8 +24,8 @@ public class loginPage extends javax.swing.JFrame {
     public loginPage() {
         initComponents();
         
-        this.setSize(500, 400);
-        
+        this.setTitle("Login Page");
+        this.setSize(500, 500);
         this.setLocationRelativeTo(null);
         
         try {
@@ -56,6 +56,7 @@ public class loginPage extends javax.swing.JFrame {
                     if (FileManager.isPasswordCorrect(parsedLine, password)) {
                         if (parsedLine[2].trim().equals(Types.STUDENT.toString())) {
                             studentMenuPage smp = new studentMenuPage(allStudents.get(parsedLine[3]), allCourses);
+                            System.out.println("Student object is initialized! ID: " + allStudents.get(parsedLine[3]).getUserID());
                             
                             smp.setVisible(true);   
                         }
@@ -63,22 +64,20 @@ public class loginPage extends javax.swing.JFrame {
                         else if (parsedLine[2].trim().equals(Types.PROFESSOR.toString())) {
                             //Create the professor object with the given information line and pass to the professorMenuPage
                             Professor professor = FileManager.initProfessor(parsedLine , allCourses);
-                            System.out.println("Professor object is created! " + professor.getUserID());
+                            System.out.println("Professor object is initialized! ID: " + professor.getUserID());
                             
                             professorMenuPage pmp = new professorMenuPage(professor, allCourses, allStudents);
                             
-                            pmp.setVisible(true);
-                            
-                            
+                            pmp.setVisible(true);   
                         }
                         
                         else if (parsedLine[2].trim().equals(Types.ADMIN.toString())) {
                             //Create the admin object with the given information line and pass to the adminMenuPage
-                            adminMenuPage amp = new adminMenuPage();
+                            Admin admin = FileManager.initAdmin(parsedLine);
+                            System.out.println("Admin object is initialized! ID: " + admin.getUserID());
+                            adminMenuPage amp = new adminMenuPage(admin);
                             
                             amp.setVisible(true);
-                            
-                            
                         }
                         
                         loginPage.this.dispose();

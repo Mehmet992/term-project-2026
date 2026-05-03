@@ -8,7 +8,6 @@ import java.io.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JOptionPane;
 
 
@@ -18,8 +17,8 @@ public class studentMenuPage extends javax.swing.JFrame {
     public studentMenuPage(Student student, HashMap<String, Course> allCourses) {
         initComponents();
         
-        this.setSize(500, 400);
-        
+        this.setTitle(student.getName() + " " + student.getSurname() + " - STUDENT");
+        this.setSize(500, 500);
         this.setLocationRelativeTo(null);
         
         viewTranscriptBtn.addActionListener(new ActionListener() {

@@ -114,6 +114,7 @@ public class FileManager {
             throw new FileNotFoundException("");
         }
         
+        System.out.println("--- Initializing all courses ---");
         //Read the file line by line, create the corresponding object for that line and add it to the ArrayList
         HashMap<String, Course> allCourses = new HashMap<>();
         
@@ -159,6 +160,7 @@ public class FileManager {
             throw new IOException(" File not found! ");
         }
         
+        System.out.println("\n--- Initializing all students ---");
         HashMap<String, Student> allStudents = new HashMap<>();
         BufferedReader br = new BufferedReader(new FileReader(studentsFile));
         String line;
@@ -181,6 +183,7 @@ public class FileManager {
             
             //All the courses will be initialized after initializing the courses!
             allStudents.put(parts[3], tempStudent);
+            System.out.println(parts[3]);
         }
         
         br.close();
@@ -270,6 +273,11 @@ public class FileManager {
         }
         
         return professor;
+    }
+    
+    public static Admin initAdmin(String[] line) {
+        Admin admin = new Admin(line[0], line[1], Types.ADMIN, line[4], line[3]);
+        return admin;
     }
     
     public static ArrayList<Course> returnPossibleCourses(Student student, HashMap<String, Course> allCourses) {

@@ -32,14 +32,12 @@ public class CreateCourseDialog extends javax.swing.JDialog {
                     int section = Integer.parseInt(sectionField.getText());
                     int maxCapacity = Integer.parseInt(capacityField.getText());
                     int credit = Integer.parseInt(creditField.getText());
-                    String startHour = startHourField.getText();
-                    String endHour = endHourField.getText();
+                    String startHour = startHourField.getText().trim();
+                    String endHour = endHourField.getText().trim();
                     String day = dayField.getText();
-                    
                     String[] startHourInformation = startHour.split(":");
                     String[] endHourInformation = endHour.split(":");
-                    
-                    
+
                     //Check if valid start hour
                     HourOperation.checkValidHour(startHourInformation);
                     
@@ -54,6 +52,33 @@ public class CreateCourseDialog extends javax.swing.JDialog {
                     
                     //Create Course Object
                     Course course = new Course(courseName, departmentName, id, section, maxCapacity, 0, credit, startHour, endHour, Day.valueOf(day.toUpperCase()));
+                    
+                    //Add Prerequisities
+                    int choice;
+                    boolean onAddingPrerequisiteMenu = true;
+                    
+                    while (onAddingPrerequisiteMenu) {
+                        choice = JOptionPane.showConfirmDialog(rootPane,
+                                "Do you want to add any Prerequisites?",
+                                "Any Prerequisites?",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE);
+                        
+                        if (choice == JOptionPane.YES_OPTION) {
+                            String input = JOptionPane.showInputDialog(rootPane, "Enter a valid course ID: ");
+                            if (input != null && !input.trim().isEmpty()) {
+                                if (input.trim().equals(id)) {
+                                    JOptionPane.showMessageDialog(rootPane, "You can not add same course as a prerequisite! ");
+                                } else if (allCourses.containsKey(input.trim())) {
+                                course.addPrerequisities(input.trim());
+                                } else {
+                                    JOptionPane.showMessageDialog(rootPane, "There is no course with ID: " + input.trim());
+                                }
+                            }    
+                        } else {
+                            onAddingPrerequisiteMenu = false;
+                        }
+                    }
                     
                     //Add to the allCourses
                     allCourses.put(id, course);

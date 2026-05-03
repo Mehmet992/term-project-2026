@@ -7,7 +7,7 @@ package universitycourseregistrationsystem;
 public class HourOperation {
     public static void checkValidHour(String[] hourInformation) throws InvalidHourException, NumberFormatException{
         if (hourInformation.length != 2 || !(Integer.parseInt(hourInformation[0]) >= 0) || !(Integer.parseInt(hourInformation[0]) <= 23) ||
-            !(Integer.parseInt(hourInformation[1]) >= 0 ) || !(Integer.parseInt(hourInformation[1]) <= 59)) {
+            !(Integer.parseInt(hourInformation[1]) >= 0 ) || !(Integer.parseInt(hourInformation[1]) <= 59) || (hourInformation[1].length() != 2)) {
             throw new InvalidHourException(" Invalid hour information! ");           
         }
     }
