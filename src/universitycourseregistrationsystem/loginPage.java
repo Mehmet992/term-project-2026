@@ -75,7 +75,7 @@ public class loginPage extends javax.swing.JFrame {
                             //Create the admin object with the given information line and pass to the adminMenuPage
                             Admin admin = FileManager.initAdmin(parsedLine);
                             System.out.println("Admin object is initialized! ID: " + admin.getUserID());
-                            adminMenuPage amp = new adminMenuPage(admin);
+                            adminMenuPage amp = new adminMenuPage(admin, allCourses, allStudents);
                             
                             amp.setVisible(true);
                         }

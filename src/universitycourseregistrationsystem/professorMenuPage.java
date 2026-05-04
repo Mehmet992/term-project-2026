@@ -62,6 +62,11 @@ public class professorMenuPage extends javax.swing.JFrame {
                             return;
                         }
                         
+                        if (Integer.parseInt(grade) > 100 || Integer.parseInt(grade) < 0) {
+                            JOptionPane.showMessageDialog(rootPane, "Enter a valid grade between 0 - 100");
+                            return;
+                        }
+                        
                         //Assign the grade, recalculate gpa and probation
                         student.changeGrade(indexOfCourse, grade);
                         student.calculateGPA();
