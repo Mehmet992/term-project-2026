@@ -143,6 +143,11 @@ public class Student extends User{
     }
     
     public void calculateGPA() {
+        if (courses.isEmpty()) {
+            this.gpa = 0.00;
+            return;
+        }
+        
         double res = 0.0;
         for (int i = 0; i < grades.size(); i++) {
             res += ((double)courses.get(i).getCredit() * (grades.get(i) * 0.04));
