@@ -20,7 +20,7 @@ public class adminMenuPage extends javax.swing.JFrame {
         initComponents();
         
         this.setTitle(admin.getName() + " " + admin.getSurname() + " - ADMIN");
-        this.setSize(500, 500);
+        this.setSize(800, 800);
         this.setLocationRelativeTo(null);
         
         btnLoadUsers.addActionListener(new ActionListener() {
